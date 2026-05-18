@@ -431,12 +431,12 @@ function ManagePanel() {
 
   async function del(table: string, id: string) {
     if (!confirm("Delete this item?")) return;
-    await supabase.from(table).delete().eq("id", id);
+    await (supabase.from as any)(table).delete().eq("id", id);
     load();
   }
   async function toggleStatus(table: string, id: string, status: string) {
     const next = status === "published" ? "draft" : "published";
-    await supabase.from(table).update({ status: next, published_at: next === "published" ? new Date().toISOString() : null }).eq("id", id);
+    await (supabase.from as any)(table).update({ status: next, published_at: next === "published" ? new Date().toISOString() : null }).eq("id", id);
     load();
   }
 
