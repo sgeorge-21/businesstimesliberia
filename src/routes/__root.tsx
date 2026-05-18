@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import useOrientation from "../hooks/useOrientation";
 
 function NotFoundComponent() {
   return (
@@ -97,12 +98,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {
+  const orientation = useOrientation();
+
   return (
     <html lang="en">
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className={orientation}>
         {children}
         <Scripts />
       </body>
