@@ -142,3 +142,298 @@
     color: var(--color-foreground);
   }
 }
+
+/* ===================== LIBERIAN BUSINESS HOUR ===================== */
+:root {
+  --green-dark: #1a3a1f;
+  --green-mid: #2d5a35;
+  --green-light: #3d7a47;
+  --green-hover: #2d7a35;
+  --gold: #c9920a;
+  --gold-light: #e0a82c;
+  --cream: #f5f0e8;
+  --cream-light: #faf8f4;
+  --text-dark: #1a1a1a;
+  --text-mid: #444;
+  --text-light: #777;
+  --lbh-border: #e0ddd6;
+  --white: #ffffff;
+}
+body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-light); color:var(--text-dark); }
+.lbh-app * { box-sizing:border-box; }
+
+/* NAVBAR */
+.lbh-app nav.lbh-nav { background:#fff; border-bottom:1px solid var(--lbh-border); position:sticky; top:0; z-index:1000; padding:0 2rem; }
+.lbh-nav .nav-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px; }
+.lbh-nav .logo-block { display:flex; align-items:center; gap:10px; cursor:pointer; text-decoration:none; }
+.lbh-nav .logo-bar { width:4px; height:40px; background:var(--green-dark); }
+.lbh-nav .logo-text { line-height:1.1; }
+.lbh-nav .logo-text .small { font-size:10px; font-weight:500; color:var(--text-light); letter-spacing:1.5px; text-transform:uppercase; }
+.lbh-nav .logo-text .big { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:var(--green-dark); }
+.lbh-nav .logo-text .sub { font-size:10px; color:var(--text-light); }
+.lbh-nav .nav-links { display:flex; gap:2rem; list-style:none; padding:0; margin:0; }
+.lbh-nav .nav-links li a {
+  text-decoration:none; font-size:13.5px; font-weight:500; color:var(--text-mid);
+  transition:color .2s,border-color .2s; letter-spacing:.2px; padding:4px 2px;
+  border-bottom:2px solid transparent;
+}
+.lbh-nav .nav-links li a:hover { color:var(--green-mid); border-bottom-color:var(--green-mid); }
+.lbh-nav .nav-links li a.active { color:var(--green-dark); border-bottom-color:var(--green-dark); }
+.lbh-nav .nav-links li a.admin-link { color:var(--gold); font-weight:600; }
+.lbh-nav .nav-links li a.admin-link:hover { color:var(--green-mid); }
+
+/* HERO */
+.lbh-app .hero { position:relative; overflow:hidden; cursor:pointer; background:linear-gradient(135deg,#1a3a1f,#2d5a35); }
+.lbh-app .hero-img { width:100%; height:520px; object-fit:cover; display:block; filter:brightness(.65); }
+.lbh-app .hero-overlay { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(10,25,10,.85)); padding:3rem 3rem 2.5rem; }
+.lbh-app .hero-tag { display:inline-block; background:var(--gold); color:#fff; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 10px; margin-bottom:1rem; border-radius:2px; }
+.lbh-app .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,3vw,2.8rem); font-weight:900; color:#fff; line-height:1.2; max-width:620px; margin-bottom:.75rem; }
+.lbh-app .hero-desc { color:rgba(255,255,255,.75); font-size:14px; max-width:500px; margin-bottom:1.2rem; }
+.lbh-app .hero-meta { display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap; }
+.lbh-app .hero-meta span { color:rgba(255,255,255,.65); font-size:12.5px; }
+.lbh-app .btn-read { display:inline-flex; align-items:center; gap:6px; background:transparent; border:1.5px solid rgba(255,255,255,.7); color:#fff; font-size:12.5px; font-weight:600; padding:7px 16px; text-decoration:none; border-radius:3px; transition:all .2s; }
+.lbh-app .btn-read:hover { background:#fff; color:var(--green-dark); }
+
+/* LAYOUT */
+.lbh-app .main-layout { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem; display:grid; grid-template-columns:1fr 300px; gap:3rem; }
+.lbh-app .full-width { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem; }
+
+/* SECTION BANNER */
+.lbh-app .section-banner { background:var(--green-dark); padding:3.5rem 3rem 0; }
+.lbh-app .section-banner .section-label { color:var(--gold); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:.5rem; }
+.lbh-app .section-banner h2 { font-family:'Playfair Display',serif; font-size:3rem; font-weight:700; color:#fff; margin-bottom:.6rem; }
+.lbh-app .section-banner p { color:rgba(255,255,255,.7); font-size:14px; max-width:500px; padding-bottom:2.5rem; }
+.lbh-app .section-tabs { background:#2d5a35; padding:.5rem 3rem; display:flex; gap:.5rem; flex-wrap:wrap; }
+.lbh-app .tab-btn { padding:7px 16px; border:none; border-radius:3px; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; background:transparent; color:rgba(255,255,255,.75); }
+.lbh-app .tab-btn.active { background:var(--gold); color:#fff; font-weight:600; }
+.lbh-app .tab-btn:hover:not(.active) { background:rgba(255,255,255,.1); color:#fff; }
+
+/* CARDS */
+.lbh-app .section-label-sm { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:1.2rem; padding-bottom:.5rem; border-bottom:2px solid var(--lbh-border); }
+.lbh-app .cards-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:2rem; }
+.lbh-app .card { background:#fff; border:1px solid var(--lbh-border); overflow:hidden; border-radius:4px; transition:box-shadow .2s, transform .2s; }
+.lbh-app .card:hover { box-shadow:0 6px 20px rgba(26,58,31,.12); transform:translateY(-2px); }
+.lbh-app .card-img { width:100%; height:200px; object-fit:cover; display:block; background:#ccc; }
+.lbh-app .card-img-wrap { position:relative; }
+.lbh-app .card-cat { position:absolute; bottom:10px; left:10px; background:var(--gold); color:#fff; font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; padding:3px 8px; border-radius:2px; }
+.lbh-app .card-body { padding:1rem; }
+.lbh-app .card-body h3 { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--text-dark); margin-bottom:.5rem; line-height:1.3; }
+.lbh-app .card-body p { font-size:13px; color:var(--text-mid); line-height:1.6; margin-bottom:.75rem; }
+.lbh-app .card-footer { display:flex; justify-content:space-between; align-items:center; }
+.lbh-app .card-meta { font-size:11.5px; color:var(--text-light); }
+.lbh-app .read-link { font-size:12.5px; font-weight:600; color:var(--green-dark); text-decoration:none; display:flex; align-items:center; gap:4px; }
+.lbh-app .read-link:hover { color:var(--gold); }
+
+/* List cards */
+.lbh-app .list-cards { display:flex; flex-direction:column; gap:1rem; }
+.lbh-app .list-card { display:flex; gap:1rem; padding:1rem; background:#fff; border:1px solid var(--lbh-border); border-radius:4px; transition:border-color .2s; }
+.lbh-app .list-card:hover { border-color:var(--green-mid); }
+.lbh-app .list-card-img { width:80px; height:70px; object-fit:cover; border-radius:3px; flex-shrink:0; background:#ccc; }
+.lbh-app .list-card-body { flex:1; }
+.lbh-app .list-card-cat { font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
+.lbh-app .list-card-body h4 { font-size:13.5px; font-weight:600; color:var(--text-dark); line-height:1.4; margin-bottom:3px; }
+.lbh-app .list-card-body span { font-size:11.5px; color:var(--text-light); }
+
+/* Featured story */
+.lbh-app .featured-story { display:grid; grid-template-columns:280px 1fr; gap:1.5rem; padding:1.5rem; background:#fff; border:1px solid var(--lbh-border); border-radius:4px; margin-bottom:1.5rem; }
+.lbh-app .featured-story img { width:100%; height:220px; object-fit:cover; border-radius:3px; background:#ccc; }
+.lbh-app .featured-story-body { display:flex; flex-direction:column; justify-content:center; }
+.lbh-app .story-tags { display:flex; gap:.5rem; margin-bottom:.75rem; flex-wrap:wrap; }
+.lbh-app .tag-pill { display:inline-block; padding:3px 10px; border-radius:3px; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.lbh-app .tag-feature { background:#1a3a1f; color:#fff; }
+.lbh-app .tag-profile { background:#c9920a; color:#fff; }
+.lbh-app .tag-opinion { background:#7a4a1a; color:#fff; }
+.lbh-app .tag-investigative { background:#1a2a5a; color:#fff; }
+.lbh-app .tag-read { background:transparent; border:1px solid #aaa; color:var(--text-mid); }
+.lbh-app .featured-story-body h3 { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--text-dark); line-height:1.25; margin-bottom:.75rem; }
+.lbh-app .featured-story-body p { font-size:13.5px; color:var(--text-mid); line-height:1.65; margin-bottom:1rem; }
+.lbh-app .btn-read-green { display:inline-flex; align-items:center; gap:6px; background:var(--green-dark); color:#fff; font-size:12px; font-weight:600; padding:8px 18px; text-decoration:none; border-radius:3px; border:none; cursor:pointer; transition:background .2s; width:fit-content; }
+.lbh-app .btn-read-green:hover { background:var(--green-mid); }
+
+/* Stats */
+.lbh-app .stats-row { display:grid; grid-template-columns:repeat(3,1fr); background:#fff; border:1px solid var(--lbh-border); margin-bottom:2rem; border-radius:4px; overflow:hidden; }
+.lbh-app .stat-cell { padding:1.25rem 1.5rem; border-right:1px solid var(--lbh-border); }
+.lbh-app .stat-cell:last-child { border-right:none; }
+.lbh-app .stat-label { font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--text-light); margin-bottom:.4rem; }
+.lbh-app .stat-value { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--text-dark); }
+.lbh-app .stat-change { font-size:12px; margin-top:3px; }
+.lbh-app .up { color:#2d7a35; }
+.lbh-app .down { color:#c0392b; }
+
+/* SIDEBAR */
+.lbh-app .sidebar-box { background:#fff; border:1px solid var(--lbh-border); border-radius:4px; margin-bottom:1.5rem; overflow:hidden; }
+.lbh-app .sidebar-header { background:var(--green-dark); color:#fff; padding:.75rem 1rem; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.lbh-app .sidebar-header.gold { background:var(--gold); }
+.lbh-app .sidebar-body { padding:1rem; }
+.lbh-app .sidebar-body p { font-size:13px; color:var(--text-mid); line-height:1.65; margin-bottom:.75rem; }
+.lbh-app .show-detail { display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem; font-size:13px; color:var(--text-mid); }
+.lbh-app .show-detail strong { color:var(--text-dark); }
+.lbh-app .btn-listen { width:100%; background:var(--green-dark); color:#fff; border:none; padding:10px; font-size:13px; font-weight:600; border-radius:3px; cursor:pointer; margin-top:.75rem; transition:background .2s; }
+.lbh-app .btn-listen:hover { background:var(--green-mid); }
+.lbh-app .popular-list { list-style:none; padding:0; margin:0; }
+.lbh-app .popular-list li { padding:.6rem 1rem; border-bottom:1px solid var(--lbh-border); font-size:13px; color:var(--text-dark); cursor:pointer; transition:color .2s; }
+.lbh-app .popular-list li:last-child { border-bottom:none; }
+.lbh-app .popular-list li:hover { color:var(--green-dark); }
+.lbh-app .subscribe-form { padding:1rem; background:var(--green-dark); }
+.lbh-app .subscribe-form h4 { color:#fff; font-size:15px; font-weight:700; margin-bottom:.4rem; }
+.lbh-app .subscribe-form p { color:rgba(255,255,255,.7); font-size:12.5px; margin-bottom:.75rem; }
+.lbh-app .subscribe-form input { width:100%; padding:9px 12px; border:none; border-radius:3px; font-size:13px; margin-bottom:.5rem; }
+.lbh-app .btn-subscribe { width:100%; background:var(--gold); color:#fff; border:none; padding:10px; font-size:13px; font-weight:700; border-radius:3px; cursor:pointer; transition:background .2s; }
+.lbh-app .btn-subscribe:hover { background:var(--gold-light); }
+
+/* PODCAST */
+.lbh-app .podcast-banner { background:var(--green-dark); padding:2.5rem 3rem; display:grid; grid-template-columns:220px 1fr; gap:2rem; align-items:center; }
+.lbh-app .podcast-cover { width:220px; height:220px; border-radius:4px; background:#2d5a35; display:flex; align-items:center; justify-content:center; padding:1rem; }
+.lbh-app .podcast-cover .kear { color:var(--gold); font-size:13px; font-weight:700; letter-spacing:2px; text-align:center; }
+.lbh-app .podcast-cover .title { color:#fff; font-family:'Playfair Display',serif; font-size:18px; font-weight:700; line-height:1.2; margin:.5rem 0; text-align:center; }
+.lbh-app .podcast-banner-info .label { color:var(--gold); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:.5rem; }
+.lbh-app .podcast-banner-info h1 { font-family:'Playfair Display',serif; font-size:2.5rem; font-weight:700; color:#fff; margin-bottom:.75rem; }
+.lbh-app .podcast-banner-info p { color:rgba(255,255,255,.75); font-size:14px; line-height:1.65; margin-bottom:1rem; max-width:560px; }
+.lbh-app .podcast-meta-row { display:flex; gap:2rem; margin-bottom:1.2rem; flex-wrap:wrap; }
+.lbh-app .podcast-meta-row span { color:rgba(255,255,255,.6); font-size:13px; }
+.lbh-app .btn-listen-big { display:inline-flex; align-items:center; gap:8px; background:var(--gold); color:#fff; border:none; font-size:14px; font-weight:700; padding:12px 24px; border-radius:3px; cursor:pointer; transition:background .2s; }
+.lbh-app .btn-listen-big:hover { background:var(--gold-light); }
+.lbh-app .listen-platforms { background:#fff; border-bottom:1px solid var(--lbh-border); padding:1rem 3rem; display:flex; align-items:center; gap:2rem; flex-wrap:wrap; }
+.lbh-app .listen-platforms span { font-size:13px; color:var(--text-light); font-weight:500; }
+.lbh-app .platform-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border:1.5px solid var(--lbh-border); border-radius:20px; font-size:13px; font-weight:500; color:var(--text-dark); cursor:pointer; transition:all .2s; background:#fff; }
+.lbh-app .platform-btn:hover { border-color:var(--green-dark); color:var(--green-dark); }
+.lbh-app .episode-featured { background:#fff; border:1px solid var(--lbh-border); border-radius:4px; padding:1.5rem; margin-bottom:1.5rem; display:grid; grid-template-columns:180px 1fr; gap:1.5rem; align-items:start; }
+.lbh-app .episode-featured img { width:100%; height:140px; object-fit:cover; border-radius:3px; background:#ccc; }
+.lbh-app .ep-label { font-size:10.5px; font-weight:700; letter-spacing:1px; color:var(--gold); text-transform:uppercase; margin-bottom:.4rem; }
+.lbh-app .episode-featured h3 { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; line-height:1.3; margin-bottom:.5rem; }
+.lbh-app .episode-featured p { font-size:13px; color:var(--text-mid); line-height:1.65; margin-bottom:.75rem; }
+.lbh-app .ep-date { font-size:12px; color:var(--text-light); margin-bottom:.75rem; }
+.lbh-app .play-row { display:flex; align-items:center; gap:1rem; }
+.lbh-app .play-btn { width:40px; height:40px; background:var(--green-dark); color:#fff; border:none; border-radius:50%; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; transition:background .2s; flex-shrink:0; }
+.lbh-app .play-btn:hover { background:var(--green-mid); }
+.lbh-app .ep-duration { font-size:12.5px; color:var(--text-light); }
+.lbh-app .show-notes-link { font-size:12.5px; color:var(--green-dark); font-weight:600; text-decoration:none; }
+.lbh-app .episodes-list { display:flex; flex-direction:column; }
+.lbh-app .episode-row { display:flex; align-items:center; gap:1rem; padding:1rem 1.25rem; background:#fff; border:1px solid var(--lbh-border); border-radius:4px; margin-bottom:.75rem; transition:box-shadow .2s; }
+.lbh-app .episode-row:hover { box-shadow:0 2px 12px rgba(0,0,0,.08); }
+.lbh-app .ep-num { font-size:12px; color:var(--text-light); width:40px; flex-shrink:0; }
+.lbh-app .ep-info { flex:1; }
+.lbh-app .ep-info h4 { font-size:14px; font-weight:600; color:var(--text-dark); margin-bottom:3px; }
+.lbh-app .ep-info span { font-size:12px; color:var(--text-light); }
+.lbh-app .ep-time { font-size:12.5px; color:var(--text-light); }
+
+/* ABOUT */
+.lbh-app .about-hero { background:var(--green-dark); text-align:center; padding:5rem 2rem; }
+.lbh-app .about-hero .label { color:var(--gold); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:.75rem; }
+.lbh-app .about-hero h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3.5rem); font-weight:700; color:#fff; line-height:1.2; margin-bottom:1rem; }
+.lbh-app .about-hero p { color:rgba(255,255,255,.75); font-size:15px; max-width:620px; margin:0 auto; line-height:1.7; }
+.lbh-app .stats-banner { background:var(--gold); padding:2.5rem 3rem; display:grid; grid-template-columns:repeat(3,1fr); text-align:center; gap:1rem; }
+.lbh-app .stat-item .stat-label2 { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,.85); margin-bottom:.3rem; }
+.lbh-app .stat-item .stat-val { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; color:#fff; }
+.lbh-app .about-section { max-width:1200px; margin:0 auto; padding:3rem 1.5rem; display:grid; grid-template-columns:1fr 300px; gap:3rem; }
+.lbh-app .about-content h2 { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; margin-bottom:1rem; }
+.lbh-app .about-content p { font-size:14.5px; color:var(--text-mid); line-height:1.8; margin-bottom:1rem; }
+.lbh-app .about-label { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:.5rem; margin-top:2rem; }
+.lbh-app .host-card { display:grid; grid-template-columns:200px 1fr; gap:1.5rem; background:#fff; border:1px solid var(--lbh-border); border-radius:4px; padding:1.5rem; margin-top:1rem; }
+.lbh-app .host-card img { width:200px; height:220px; object-fit:cover; border-radius:3px; background:#ccc; }
+.lbh-app .host-card h3 { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; margin-bottom:.25rem; }
+.lbh-app .host-role { font-size:12px; font-weight:600; color:var(--gold); text-transform:uppercase; letter-spacing:1px; margin-bottom:.75rem; }
+.lbh-app .host-card p { font-size:13.5px; color:var(--text-mid); line-height:1.7; margin-bottom:.5rem; }
+.lbh-app .social-pills { display:flex; gap:.5rem; margin-top:.75rem; flex-wrap:wrap; }
+.lbh-app .social-pill { padding:5px 14px; border:1.5px solid var(--lbh-border); border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; transition:all .2s; }
+.lbh-app .social-pill:hover { border-color:var(--green-dark); color:var(--green-dark); }
+.lbh-app .values-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem; }
+.lbh-app .value-card { background:#fff; border:1px solid var(--lbh-border); padding:1.2rem; border-radius:4px; }
+.lbh-app .value-card h4 { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; margin-bottom:.5rem; }
+.lbh-app .value-card p { font-size:13px; color:var(--text-mid); line-height:1.65; }
+.lbh-app .contact-form { background:#fff; border:1px solid var(--lbh-border); padding:1.5rem; border-radius:4px; margin-top:1.5rem; }
+.lbh-app .contact-form h3 { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; margin-bottom:1.25rem; }
+.lbh-app .form-group { margin-bottom:1rem; }
+.lbh-app .form-group label { display:block; font-size:12.5px; font-weight:600; color:var(--text-dark); margin-bottom:.35rem; }
+.lbh-app .form-group input, .lbh-app .form-group textarea, .lbh-app .form-group select { width:100%; padding:10px 12px; border:1.5px solid var(--lbh-border); border-radius:3px; font-size:13.5px; font-family:inherit; transition:border-color .2s; background:#fff; }
+.lbh-app .form-group input:focus, .lbh-app .form-group textarea:focus, .lbh-app .form-group select:focus { outline:none; border-color:var(--green-dark); }
+.lbh-app .form-group textarea { height:100px; resize:vertical; }
+.lbh-app .btn-send { width:100%; background:var(--green-dark); color:#fff; border:none; padding:11px; font-size:14px; font-weight:600; border-radius:3px; cursor:pointer; transition:background .2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+.lbh-app .btn-send:hover { background:var(--green-mid); }
+
+/* FOOTER */
+.lbh-app footer.lbh-footer { background:var(--text-dark); color:rgba(255,255,255,.7); padding:3rem 2rem 1.5rem; margin-top:3rem; }
+.lbh-app .footer-inner { max-width:1200px; margin:0 auto; }
+.lbh-app .footer-top { display:grid; grid-template-columns:280px 1fr 1fr; gap:3rem; margin-bottom:2rem; }
+.lbh-app .footer-brand .big { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:#fff; margin-bottom:.3rem; }
+.lbh-app .footer-brand .kear { color:var(--gold); font-size:12px; margin-bottom:.75rem; }
+.lbh-app .footer-brand p { font-size:13px; line-height:1.65; margin-bottom:1rem; }
+.lbh-app .social-row { display:flex; gap:.75rem; }
+.lbh-app .social-icon { width:32px; height:32px; background:rgba(255,255,255,.15); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:background .2s; }
+.lbh-app .social-icon:hover { background:var(--gold); }
+.lbh-app .footer-col h5 { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:1rem; }
+.lbh-app .footer-col a { display:block; font-size:13.5px; color:rgba(255,255,255,.65); text-decoration:none; margin-bottom:.5rem; transition:color .2s; }
+.lbh-app .footer-col a:hover { color:var(--gold); }
+.lbh-app .footer-bottom { border-top:1px solid rgba(255,255,255,.1); padding-top:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+.lbh-app .footer-bottom span { font-size:12px; }
+
+/* ADMIN */
+.lbh-app .admin-login { min-height:calc(100vh - 64px); display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--green-dark),#0d2010); padding:2rem; }
+.lbh-app .admin-login-box { background:#fff; padding:2.5rem; border-radius:8px; width:100%; max-width:380px; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+.lbh-app .admin-logo { text-align:center; margin-bottom:1.5rem; }
+.lbh-app .admin-logo .big { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--green-dark); }
+.lbh-app .admin-logo .sub { display:block; font-size:12px; color:var(--gold); font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-top:2px; }
+.lbh-app .admin-panel { min-height:100vh; background:#f0f0f0; }
+.lbh-app .admin-nav { background:var(--green-dark); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px; flex-wrap:wrap; gap:1rem; }
+.lbh-app .admin-nav .a-brand { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:#fff; }
+.lbh-app .admin-nav .a-brand span { color:var(--gold); }
+.lbh-app .admin-nav-links { display:flex; gap:1.5rem; flex-wrap:wrap; }
+.lbh-app .admin-nav-links a { color:rgba(255,255,255,.7); font-size:13px; font-weight:500; text-decoration:none; cursor:pointer; transition:color .2s; background:none; border:none; padding:0; font-family:inherit; }
+.lbh-app .admin-nav-links a:hover, .lbh-app .admin-nav-links a.active { color:#fff; }
+.lbh-app .admin-logout { background:rgba(255,255,255,.15); color:#fff; border:none; padding:7px 14px; border-radius:3px; font-size:13px; cursor:pointer; transition:background .2s; }
+.lbh-app .admin-logout:hover { background:rgba(255,255,255,.25); }
+.lbh-app .admin-body { max-width:1100px; margin:0 auto; padding:2rem 1.5rem; }
+.lbh-app .admin-card { background:#fff; border:1px solid var(--lbh-border); border-radius:6px; overflow:hidden; margin-bottom:1.5rem; }
+.lbh-app .admin-card-header { background:var(--green-dark); color:#fff; padding:1rem 1.5rem; font-size:14px; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
+.lbh-app .admin-card-header .badge { background:var(--gold); color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:10px; }
+.lbh-app .admin-card-body { padding:1.5rem; }
+.lbh-app .admin-form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+.lbh-app .admin-form-group { margin-bottom:1rem; }
+.lbh-app .admin-form-group label { display:block; font-size:12.5px; font-weight:600; color:var(--text-dark); margin-bottom:.35rem; }
+.lbh-app .admin-form-group input, .lbh-app .admin-form-group textarea, .lbh-app .admin-form-group select { width:100%; padding:9px 12px; border:1.5px solid var(--lbh-border); border-radius:4px; font-size:13.5px; font-family:inherit; transition:border-color .2s; background:#fff; }
+.lbh-app .admin-form-group input:focus, .lbh-app .admin-form-group textarea:focus, .lbh-app .admin-form-group select:focus { outline:none; border-color:var(--green-dark); }
+.lbh-app .admin-form-group textarea { height:120px; resize:vertical; }
+.lbh-app .file-upload-area { border:2px dashed var(--lbh-border); border-radius:4px; padding:1.5rem; text-align:center; cursor:pointer; transition:all .2s; background:var(--cream-light); }
+.lbh-app .file-upload-area:hover { border-color:var(--green-dark); background:#f0f5f1; }
+.lbh-app .file-upload-area p { font-size:13px; color:var(--text-mid); margin-bottom:.3rem; }
+.lbh-app .file-upload-area small { font-size:12px; color:var(--text-light); }
+.lbh-app .admin-btn-row { display:flex; justify-content:flex-end; gap:.75rem; margin-top:1.5rem; flex-wrap:wrap; }
+.lbh-app .btn-cancel { padding:9px 22px; border:1.5px solid var(--lbh-border); background:#fff; color:var(--text-mid); font-size:13.5px; font-weight:500; border-radius:4px; cursor:pointer; }
+.lbh-app .btn-publish { padding:9px 22px; background:var(--green-dark); color:#fff; border:none; font-size:13.5px; font-weight:600; border-radius:4px; cursor:pointer; transition:background .2s; }
+.lbh-app .btn-publish:hover { background:var(--green-mid); }
+.lbh-app .btn-publish:disabled { background:#888; cursor:not-allowed; }
+.lbh-app .btn-save-draft { padding:9px 22px; background:var(--gold); color:#fff; border:none; font-size:13.5px; font-weight:600; border-radius:4px; cursor:pointer; }
+.lbh-app .content-table { width:100%; border-collapse:collapse; }
+.lbh-app .content-table th { background:var(--cream); padding:.75rem 1rem; text-align:left; font-size:11.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--text-light); border-bottom:2px solid var(--lbh-border); }
+.lbh-app .content-table td { padding:.75rem 1rem; border-bottom:1px solid var(--lbh-border); font-size:13.5px; color:var(--text-dark); }
+.lbh-app .content-table tr:last-child td { border-bottom:none; }
+.lbh-app .content-table tr:hover td { background:var(--cream-light); }
+.lbh-app .status-badge { display:inline-block; padding:3px 8px; border-radius:10px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+.lbh-app .status-published { background:#d4edda; color:#155724; }
+.lbh-app .status-draft { background:#fff3cd; color:#856404; }
+.lbh-app .action-btns { display:flex; gap:.5rem; }
+.lbh-app .btn-edit { padding:4px 12px; background:var(--green-dark); color:#fff; border:none; border-radius:3px; font-size:12px; cursor:pointer; }
+.lbh-app .btn-delete { padding:4px 12px; background:#dc3545; color:#fff; border:none; border-radius:3px; font-size:12px; cursor:pointer; }
+.lbh-app .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem; }
+.lbh-app .stat-box { background:#fff; border:1px solid var(--lbh-border); border-radius:6px; padding:1.25rem; }
+.lbh-app .stat-box .s-label { font-size:12px; color:var(--text-light); font-weight:500; margin-bottom:.4rem; }
+.lbh-app .stat-box .s-val { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--text-dark); }
+.lbh-app .stat-box .s-sub { font-size:12px; color:var(--gold); margin-top:.25rem; }
+
+/* Responsive */
+@media(max-width:768px) {
+  .lbh-app .main-layout, .lbh-app .about-section { grid-template-columns:1fr; }
+  .lbh-app .sidebar { display:none; }
+  .lbh-app .cards-grid { grid-template-columns:1fr; }
+  .lbh-app .featured-story, .lbh-app .host-card { grid-template-columns:1fr; }
+  .lbh-app .podcast-banner { grid-template-columns:1fr; }
+  .lbh-app .stats-grid { grid-template-columns:1fr 1fr; }
+  .lbh-app .admin-form-row { grid-template-columns:1fr; }
+  .lbh-app .footer-top { grid-template-columns:1fr; }
+  .lbh-nav .nav-links { gap:1rem; font-size:12px; flex-wrap:wrap; }
+  .lbh-app .section-banner, .lbh-app .section-tabs, .lbh-app .podcast-banner, .lbh-app .listen-platforms { padding-left:1.5rem; padding-right:1.5rem; }
+  .lbh-app .section-banner h2 { font-size:2rem; }
+  .lbh-app .hero-overlay { padding:1.5rem; }
+  .lbh-app .stats-banner { grid-template-columns:1fr; }
+  .lbh-app .values-grid { grid-template-columns:1fr; }
+}
