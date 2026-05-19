@@ -421,19 +421,40 @@ body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-li
 .lbh-app .stat-box .s-sub { font-size:12px; color:var(--gold); margin-top:.25rem; }
 
 /* Responsive */
+.lbh-app img, .lbh-app video { max-width:100%; height:auto; }
+.lbh-app .hero-img { height:clamp(280px, 50vh, 520px); }
+
+@media(max-width:1024px) {
+  .lbh-app .main-layout { grid-template-columns:1fr 260px; gap:2rem; padding:2rem 1.25rem; }
+  .lbh-nav .nav-links { gap:1.25rem; }
+}
+
+@media(max-width:860px) {
+  .lbh-app nav.lbh-nav { padding:0 1rem; }
+  .lbh-nav .nav-inner { flex-direction:column; height:auto; padding:.75rem 0; gap:.5rem; }
+  .lbh-nav .nav-links { gap:.75rem 1rem; font-size:12.5px; flex-wrap:wrap; justify-content:center; }
+}
+
 @media(max-width:768px) {
-  .lbh-app .main-layout, .lbh-app .about-section { grid-template-columns:1fr; }
+  .lbh-app .main-layout, .lbh-app .about-section { grid-template-columns:1fr; padding:1.5rem 1rem; gap:1.5rem; }
   .lbh-app .sidebar { display:none; }
   .lbh-app .cards-grid { grid-template-columns:1fr; }
   .lbh-app .featured-story, .lbh-app .host-card { grid-template-columns:1fr; }
   .lbh-app .podcast-banner { grid-template-columns:1fr; }
   .lbh-app .stats-grid { grid-template-columns:1fr 1fr; }
   .lbh-app .admin-form-row { grid-template-columns:1fr; }
-  .lbh-app .footer-top { grid-template-columns:1fr; }
-  .lbh-nav .nav-links { gap:1rem; font-size:12px; flex-wrap:wrap; }
-  .lbh-app .section-banner, .lbh-app .section-tabs, .lbh-app .podcast-banner, .lbh-app .listen-platforms { padding-left:1.5rem; padding-right:1.5rem; }
-  .lbh-app .section-banner h2 { font-size:2rem; }
-  .lbh-app .hero-overlay { padding:1.5rem; }
+  .lbh-app .footer-top { grid-template-columns:1fr; gap:1.5rem; }
+  .lbh-app .section-banner, .lbh-app .section-tabs, .lbh-app .podcast-banner, .lbh-app .listen-platforms { padding-left:1rem; padding-right:1rem; }
+  .lbh-app .section-banner h2 { font-size:1.75rem; }
+  .lbh-app .hero-overlay { padding:1.25rem; }
   .lbh-app .stats-banner { grid-template-columns:1fr; }
   .lbh-app .values-grid { grid-template-columns:1fr; }
+  .lbh-app .section-tabs { overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
+  .lbh-app .section-tabs .tab-btn { white-space:nowrap; }
+}
+
+@media(max-width:480px) {
+  .lbh-app .stats-grid { grid-template-columns:1fr; }
+  .lbh-nav .logo-text .big { font-size:17px; }
+  .lbh-app .hero h1 { font-size:1.5rem; }
 }

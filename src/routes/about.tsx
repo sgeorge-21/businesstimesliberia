@@ -14,7 +14,7 @@ function AboutPage() {
         <p>The Liberian Business Hour is Liberia's most trusted weekly business radio program — bringing in-depth analysis, expert interviews, and the stories that matter most to Liberian entrepreneurs and professionals.</p>
       </div>
       <div className="stats-banner">
-        <div className="stat-item"><div className="stat-label2">On Air Since</div><div className="stat-val">Kear 95.9FM</div></div>
+        <div className="stat-item"><div className="stat-label2">On Air Since</div><div className="stat-val">95.9FM</div></div>
         <div className="stat-item"><div className="stat-label2">Episodes Produced</div><div className="stat-val">50+ Episodes</div></div>
         <div className="stat-item"><div className="stat-label2">Weekly Audience</div><div className="stat-val">Thousands of Listeners</div></div>
       </div>
@@ -22,7 +22,7 @@ function AboutPage() {
         <div className="about-content">
           <div className="about-label">About The Show</div>
           <h2>Liberia's Premier Business Radio Program</h2>
-          <p>The Liberian Business Hour is a weekly radio program that airs every Saturday from 7:00 to 7:45 AM on Kear Radio 95.9FM in Monrovia, Liberia. For those who miss the live broadcast, the show repeats every Sunday from 5:00 to 5:45 PM on the same station.</p>
+          <p>The Liberian Business Hour is a weekly radio program that airs every Saturday from 7:00 to 7:45 AM on 95.9FM in Monrovia, Liberia. For those who miss the live broadcast, the show repeats every Sunday from 5:00 to 5:45 PM on the same station.</p>
           <p>Founded with the mission to inform, educate, and empower Liberia's business community, the show covers everything from macroeconomic policy and banking reform to entrepreneurship, agriculture, technology, and trade.</p>
           <div className="about-label">Meet The Host</div>
           <h2>James T. Worquea III</h2>
@@ -31,7 +31,7 @@ function AboutPage() {
             <div>
               <h3>James T. Worquea III</h3>
               <div className="host-role">Host & Executive Producer — The Liberian Business Hour</div>
-              <p>James T. Worquea III is a Liberian business journalist, radio host, and economic commentator. As the host and executive producer of The Liberian Business Hour on Kear Radio 95.9FM, he has established himself as one of Liberia's most respected voices on business and economic affairs.</p>
+              <p>James T. Worquea III is a Liberian business journalist, radio host, and economic commentator. As the host and executive producer of The Liberian Business Hour on 95.9FM, he has established himself as one of Liberia's most respected voices on business and economic affairs.</p>
               <p>His weekly program reaches thousands of business owners, entrepreneurs, investors, and professionals across Liberia and the diaspora.</p>
               <div className="social-pills">
                 <span className="social-pill">Facebook</span>

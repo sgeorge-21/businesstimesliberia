@@ -25,9 +25,9 @@ function PodcastPage() {
         <div className="podcast-banner-info">
           <div className="label">Podcast & Radio Archive</div>
           <h1>The Liberian Business Hour</h1>
-          <p>Every Saturday from 7:00–7:45 AM on Kear 95.9FM. Hosted by James T. Worquea III, the show brings you Liberia's most important business, finance, and economic conversations.</p>
+          <p>Every Saturday from 7:00–7:45 AM on 95.9FM. Hosted by James T. Worquea III, the show brings you Liberia's most important business, finance, and economic conversations.</p>
           <div className="podcast-meta-row">
-            <span>Kear 95.9FM</span>
+            <span>95.9FM</span>
             <span>Every Saturday 7–7:45 AM</span>
             <span>Repeat: Sundays 5–5:45 PM</span>
             <span>{dbEps.length + 50}+ Episodes</span>
@@ -40,7 +40,7 @@ function PodcastPage() {
         <button className="platform-btn">🟢 Spotify</button>
         <button className="platform-btn">🍎 Apple Music</button>
         <button className="platform-btn">▶ YouTube</button>
-        <button className="platform-btn">📻 Kear 95.9FM</button>
+        <button className="platform-btn">📻 95.9FM</button>
       </div>
       <div className="full-width">
         <div className="section-label-sm" style={{ marginBottom: "1.2rem" }}>Latest Episode</div>
