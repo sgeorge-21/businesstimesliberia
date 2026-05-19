@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import type { Card, ListItem } from "./data";
 
 export function StoryCard({ c }: { c: Card }) {
