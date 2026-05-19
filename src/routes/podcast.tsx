@@ -58,7 +58,7 @@ function PodcastPage() {
                 <>
                   <button className="play-btn">▶</button>
                   <span className="ep-duration">45 min</span>
-                  <a href="#" className="show-notes-link">Read Show Note →</a>
+                  <a href="/stories" className="show-notes-link">Read Show Note →</a>
                 </>
               )}
             </div>
