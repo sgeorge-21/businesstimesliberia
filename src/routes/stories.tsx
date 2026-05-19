@@ -1,10 +1,39 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import Layout, { ShowSidebar } from "@/components/lbh/Layout";
-import { FEATURED_STORIES } from "@/components/lbh/data";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/stories")({ component: StoriesPage });
 
+type StoryRow = {
+  id: string;
+  slug: string | null;
+  title: string;
+  category: string;
+  summary: string | null;
+  cover_url: string | null;
+  author: string | null;
+  read_minutes: number | null;
+  published_at: string | null;
+  tags: string[] | null;
+};
+
 function StoriesPage() {
+  const [stories, setStories] = useState<StoryRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("stories")
+        .select("id,slug,title,category,summary,cover_url,author,read_minutes,published_at,tags")
+        .eq("status", "published")
+        .order("published_at", { ascending: false });
+      setStories((data ?? []) as StoryRow[]);
+      setLoading(false);
+    })();
+  }, []);
+
   return (
     <Layout>
       <div className="section-banner">
@@ -20,28 +49,32 @@ function StoriesPage() {
       <div className="main-layout">
         <div>
           <div className="section-label-sm">Featured Stories</div>
-          {FEATURED_STORIES.map((s, i) => (
-            <div className="featured-story" key={i}>
-              <img src={s.img} alt={s.title} loading="lazy" />
+          {loading && <p>Loading stories…</p>}
+          {!loading && stories.length === 0 && <p>No stories published yet.</p>}
+          {stories.map((s) => (
+            <div className="featured-story" key={s.id}>
+              {s.cover_url && <img src={s.cover_url} alt={s.title} loading="lazy" />}
               <div className="featured-story-body">
                 <div className="story-tags">
-                  <span className={`tag-pill ${s.pillClass}`}>{s.tags[0]}</span>
-                  <span className="tag-pill tag-read">{s.tags[1]}</span>
+                  <span className="tag-pill tag-feature">{s.category}</span>
+                  {s.read_minutes && <span className="tag-pill tag-read">{s.read_minutes} min read</span>}
                 </div>
                 <h3>{s.title}</h3>
-                <p>{s.body}</p>
-                <p style={{ fontSize: "12.5px", color: "var(--text-light)" }}>{s.byline}</p>
-                <a href="#" className="btn-read-green" style={{ marginTop: ".75rem" }}>Read Full Story</a>
+                {s.summary && <p>{s.summary}</p>}
+                <p style={{ fontSize: "12.5px", color: "var(--text-light)" }}>
+                  By {s.author ?? "LBH Staff"}
+                  {s.published_at && ` · ${new Date(s.published_at).toLocaleDateString()}`}
+                </p>
+                {s.slug && (
+                  <Link to="/stories/$slug" params={{ slug: s.slug }} className="btn-read-green" style={{ marginTop: ".75rem" }}>
+                    Read Full Story
+                  </Link>
+                )}
               </div>
             </div>
           ))}
         </div>
-        <ShowSidebar title="Top Stories" items={[
-          "From Market Table to Million-Dollar Brand",
-          "The Hidden Cost of Doing Business in Liberia",
-          "Meet Liberia's Youngest Self-Made Millionaire",
-          "How Women Are Leading Liberia's Economic Recovery",
-        ]} />
+        <ShowSidebar title="Top Stories" items={stories.slice(0, 4).map(s => s.title)} />
       </div>
     </Layout>
   );
