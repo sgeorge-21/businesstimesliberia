@@ -53,8 +53,8 @@ export function Footer() {
         <div className="footer-top">
           <div className="footer-brand">
             <div className="big">The Liberian Business Hour</div>
-            <div className="kear">Kear 95.9FM · Monrovia, Liberia</div>
-            <p>Informing Liberia's business community one story at a time. Every Saturday morning on Kear Radio 95.9FM.</p>
+            <div className="kear">95.9FM · Monrovia, Liberia</div>
+            <p>Informing Liberia's business community one story at a time. Every Saturday morning on 95.9FM.</p>
             <div className="social-row">
               <div className="social-icon">f</div>
               <div className="social-icon">𝕏</div>
@@ -90,7 +90,7 @@ export function ShowSidebar({ title = "Trending", items }: { title?: string; ite
       <div className="sidebar-box">
         <div className="sidebar-header">About The Show</div>
         <div className="sidebar-body">
-          <p>A weekly business radio program on <strong>Kear 95.9FM</strong>, hosted by James T. Worquea III.</p>
+          <p>A weekly business radio program on <strong>95.9FM</strong>, hosted by James T. Worquea III.</p>
           <div className="show-detail">📅 <strong>Every Saturday</strong></div>
           <div className="show-detail">⏰ <strong>7:00 – 7:45 AM</strong></div>
           <div className="show-detail">🔁 <strong>Repeat: Sundays 5–5:45 PM</strong></div>
