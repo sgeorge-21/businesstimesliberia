@@ -37,7 +37,7 @@ function Home() {
           <div className="hero-meta">
             <span>By {hero?.author || "James T. Worquea III"}</span>
             <span>{hero ? new Date(hero.published_at || hero.created_at).toLocaleDateString() : "April 22, 2026"} · {hero?.read_minutes || 5} min read</span>
-            <a href="#" className="btn-read">Read Full Story →</a>
+            <a href="/stories" className="btn-read">Read Full Story →</a>
           </div>
         </div>
       </div>

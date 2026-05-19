@@ -28,7 +28,7 @@ function BusinessPage() {
               <h3>New Investment Incentive Act Opens Doors for Liberian Business Owners</h3>
               <p>President Boakai's landmark legislation offers major tax breaks and regulatory relief for businesses operating in manufacturing, agribusiness, and the tech sector.</p>
               <p style={{ fontSize: "12.5px", color: "var(--text-light)" }}>By James T. Worquea III · April 22, 2026 · 6 min read</p>
-              <a href="#" className="btn-read-green" style={{ marginTop: ".75rem" }}>Read Full Story →</a>
+              <a href="/stories" className="btn-read-green" style={{ marginTop: ".75rem" }}>Read Full Story →</a>
             </div>
           </div>
           <div className="section-label-sm">Latest in Business</div>
