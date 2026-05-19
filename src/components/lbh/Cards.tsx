@@ -13,7 +13,7 @@ export function StoryCard({ c }: { c: Card }) {
         <p>{c.excerpt}</p>
         <div className="card-footer">
           <span className="card-meta">{c.meta}</span>
-          <a href="#" className="read-link">Read →</a>
+          <Link to="/stories" className="read-link">Read →</Link>
         </div>
       </div>
     </div>
