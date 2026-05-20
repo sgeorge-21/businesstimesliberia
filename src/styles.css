@@ -181,6 +181,13 @@ body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-li
 .lbh-nav .nav-links li a.active { color:var(--green-dark); border-bottom-color:var(--green-dark); }
 .lbh-nav .nav-links li a.admin-link { color:var(--gold); font-weight:600; }
 .lbh-nav .nav-links li a.admin-link:hover { color:var(--green-mid); }
+.lbh-nav .mobile-menu-btn { display:none; align-items:center; justify-content:center; width:42px; height:42px; border:1px solid var(--lbh-border); border-radius:4px; background:#fff; color:var(--green-dark); cursor:pointer; transition:border-color .2s, color .2s, background .2s; }
+.lbh-nav .mobile-menu-btn:hover { border-color:var(--green-mid); color:var(--green-mid); background:var(--cream-light); }
+.mobile-nav-sheet { background:#fff; border-right:1px solid var(--lbh-border); padding:1.25rem 1rem; }
+.mobile-nav-title { font-family:'Playfair Display',serif; color:var(--green-dark); margin-bottom:1rem; }
+.mobile-nav-links { display:flex; flex-direction:column; gap:.35rem; margin-top:1rem; }
+.mobile-nav-links a { text-decoration:none; color:var(--text-dark); font-size:14px; font-weight:600; padding:.85rem .9rem; border-radius:4px; transition:background .2s, color .2s; }
+.mobile-nav-links a:hover, .mobile-nav-links a.active { background:var(--cream); color:var(--green-dark); }
 
 /* HERO */
 .lbh-app .hero { position:relative; overflow:hidden; cursor:pointer; background:linear-gradient(135deg,#1a3a1f,#2d5a35); }
@@ -431,8 +438,9 @@ body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-li
 
 @media(max-width:860px) {
   .lbh-app nav.lbh-nav { padding:0 1rem; }
-  .lbh-nav .nav-inner { flex-direction:column; height:auto; padding:.75rem 0; gap:.5rem; }
-  .lbh-nav .nav-links { gap:.75rem 1rem; font-size:12.5px; flex-wrap:wrap; justify-content:center; }
+  .lbh-nav .nav-inner { height:auto; min-height:64px; padding:.75rem 0; gap:1rem; }
+  .lbh-nav .nav-links { display:none; }
+  .lbh-nav .mobile-menu-btn { display:inline-flex; }
 }
 
 @media(max-width:768px) {
