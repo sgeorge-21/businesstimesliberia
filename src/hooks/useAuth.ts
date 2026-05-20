@@ -2,21 +2,35 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
 
+import { getAdminStatus } from "@/lib/auth.functions";
+
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  async function refreshAdminStatus(nextUser: User | null) {
+    if (!nextUser) {
+      setIsAdmin(false);
+      return;
+    }
+
+    try {
+      const result = await getAdminStatus();
+      setIsAdmin(result.isAdmin);
+    } catch {
+      setIsAdmin(false);
+    }
+  }
+
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
-        // defer to avoid deadlock
-        setTimeout(async () => {
-          const { data } = await supabase.from("user_roles").select("role").eq("user_id", s.user.id).eq("role", "admin").maybeSingle();
-          setIsAdmin(!!data);
+        setTimeout(() => {
+          refreshAdminStatus(s.user);
         }, 0);
       } else {
         setIsAdmin(false);
@@ -26,9 +40,7 @@ export function useAuth() {
       setSession(data.session);
       setUser(data.session?.user ?? null);
       setLoading(false);
-      if (data.session?.user) {
-        supabase.from("user_roles").select("role").eq("user_id", data.session.user.id).eq("role", "admin").maybeSingle().then(({ data: r }) => setIsAdmin(!!r));
-      }
+      void refreshAdminStatus(data.session?.user ?? null);
     });
     return () => sub.subscription.unsubscribe();
   }, []);
