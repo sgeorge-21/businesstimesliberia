@@ -13,6 +13,7 @@ export function useAuth() {
   async function refreshAdminStatus(nextUser: User | null) {
     if (!nextUser) {
       setIsAdmin(false);
+      setLoading(false);
       return;
     }
 
@@ -21,6 +22,8 @@ export function useAuth() {
       setIsAdmin(result.isAdmin);
     } catch {
       setIsAdmin(false);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -39,7 +42,6 @@ export function useAuth() {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setUser(data.session?.user ?? null);
-      setLoading(false);
       void refreshAdminStatus(data.session?.user ?? null);
     });
     return () => sub.subscription.unsubscribe();
