@@ -1,5 +1,14 @@
 import { Link, useLocation } from "@tanstack/react-router";
+import { Menu } from "lucide-react";
 import type { ReactNode } from "react";
+
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -13,6 +22,7 @@ const NAV = [
 
 export function NavBar() {
   const { pathname } = useLocation();
+
   return (
     <nav className="lbh-nav">
       <div className="nav-inner">
@@ -36,6 +46,32 @@ export function NavBar() {
             );
           })}
         </ul>
+
+        <Sheet>
+          <SheetTrigger asChild>
+            <button type="button" className="mobile-menu-btn" aria-label="Open menu">
+              <Menu size={20} />
+            </button>
+          </SheetTrigger>
+
+          <SheetContent side="left" className="mobile-nav-sheet">
+            <SheetTitle className="mobile-nav-title">Pages</SheetTitle>
+
+            <div className="mobile-nav-links">
+              {NAV.map((n) => {
+                const active = n.to === "/" ? pathname === "/" : pathname.startsWith(n.to);
+
+                return (
+                  <SheetClose asChild key={n.to}>
+                    <Link to={n.to} className={active ? "active" : ""}>
+                      {n.label}
+                    </Link>
+                  </SheetClose>
+                );
+              })}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );
