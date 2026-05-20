@@ -35,11 +35,6 @@ export function NavBar() {
               </li>
             );
           })}
-          <li>
-            <Link to="/admin" className={`admin-link ${pathname.startsWith("/admin") ? "active" : ""}`}>
-              ⚙ Admin
-            </Link>
-          </li>
         </ul>
       </div>
     </nav>
