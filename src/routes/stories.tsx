@@ -18,9 +18,12 @@ type StoryRow = {
   tags: string[] | null;
 };
 
+const TABS = ["All Stories", "Feature", "Profiles", "Opinion", "Investigative", "Community"];
+
 function StoriesPage() {
   const [stories, setStories] = useState<StoryRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState(TABS[0]);
 
   useEffect(() => {
     (async () => {
@@ -34,6 +37,15 @@ function StoriesPage() {
     })();
   }, []);
 
+  const filtered = tab === TABS[0]
+    ? stories
+    : stories.filter((s) => {
+        const t = tab.toLowerCase();
+        const c = (s.category || "").toLowerCase();
+        const tags = (s.tags || []).map((x) => x.toLowerCase());
+        return c.includes(t) || t.includes(c) || tags.some((x) => x.includes(t) || t.includes(x));
+      });
+
   return (
     <Layout>
       <div className="section-banner">
@@ -42,16 +54,16 @@ function StoriesPage() {
         <p>In-depth features, profiles, and long-form journalism about the people and businesses shaping Liberia.</p>
       </div>
       <div className="section-tabs">
-        {["All Stories", "Feature", "Profiles", "Opinion", "Investigative", "Community"].map((t, i) => (
-          <button key={t} className={`tab-btn ${i === 0 ? "active" : ""}`}>{t}</button>
+        {TABS.map((t) => (
+          <button key={t} className={`tab-btn ${tab === t ? "active" : ""}`} onClick={() => setTab(t)}>{t}</button>
         ))}
       </div>
       <div className="main-layout">
         <div>
-          <div className="section-label-sm">Featured Stories</div>
+          <div className="section-label-sm">{tab === TABS[0] ? "Featured Stories" : tab}</div>
           {loading && <p>Loading stories…</p>}
-          {!loading && stories.length === 0 && <p>No stories published yet.</p>}
-          {stories.map((s) => (
+          {!loading && filtered.length === 0 && <p style={{ color: "var(--text-light)" }}>No stories in this category yet.</p>}
+          {filtered.map((s) => (
             <div className="featured-story" key={s.id}>
               {s.cover_url && <img src={s.cover_url} alt={s.title} loading="lazy" />}
               <div className="featured-story-body">
@@ -79,3 +91,4 @@ function StoriesPage() {
     </Layout>
   );
 }
+
