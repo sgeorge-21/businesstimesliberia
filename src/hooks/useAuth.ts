@@ -19,7 +19,8 @@ export function useAuth() {
 
     try {
       const result = await getAdminStatus();
-      setIsAdmin(result.isAdmin);
+console.log("ADMIN RESULT:", result);
+setIsAdmin(result.isAdmin);
     } catch {
       setIsAdmin(false);
     } finally {
