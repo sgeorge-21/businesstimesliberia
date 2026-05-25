@@ -6,7 +6,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 export const getAdminStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-  console.log("FULL CONTEXT:", context)
+  console.log(""SERVER CONTEXT:", context)
 
   const userId =
     context.userId ||
@@ -15,21 +15,19 @@ export const getAdminStatus = createServerFn({ method: "GET" })
 
   console.log("RESOLVED USER ID:", userId)
 
-  const { data, error } = await supabaseAdmin
+   const { data, error } = await supabaseAdmin
     .from("user_roles")
     .select("role")
-    .eq("user_id", userId)
+    .eq("user_id", context.userId)
     .eq("role", "admin")
-    .maybeSingle()
+    .maybeSingle();
 
-  console.log("QUERY DATA:", data)
-  console.log("QUERY ERROR:", error)
+   console.log("SERVER DATA:", data);
+  console.log("SERVER ERROR:", error);
 
   if (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 
-  return {
-    isAdmin: !!data,
-  }
-})
+  return { isAdmin: Boolean(data) };
+});
