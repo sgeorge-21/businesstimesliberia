@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
 
-import { getAdminStatus } from "@/lib/auth.functions";
+//import { getAdminStatus } from "@/lib/auth.functions";
 
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
@@ -18,14 +18,31 @@ export function useAuth() {
     }
 
     try {
-      const result = await getAdminStatus();
-console.log("ADMIN RESULT:", result);
-setIsAdmin(result.isAdmin);
-    } catch {
-      setIsAdmin(false);
-    } finally {
-      setLoading(false);
-    }
+  const { data, error } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", nextUser.id);
+
+  console.log("ROLE DATA:", data);
+  console.log("ROLE ERROR:", error);
+
+  if (error) {
+    setIsAdmin(false);
+    return;
+  }
+
+  const admin = data?.some((r) => r.role === "admin");
+
+  console.log("IS ADMIN:", admin);
+
+  setIsAdmin(!!admin);
+
+} catch (e) {
+  console.error("ADMIN CHECK FAILED:", e);
+  setIsAdmin(false);
+} finally {
+  setLoading(false);
+}
   }
 
   useEffect(() => {
