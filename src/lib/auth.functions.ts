@@ -1,21 +1,33 @@
 import { createServerFn } from "@tanstack/react-start";
+
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 export const getAdminStatus = createServerFn({ method: "GET" })
-  .handler(async () => {
-    const userId = "d66bf593-89bc-4ad6-b02b-5e5981d6c56a";
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+  console.log(""SERVER CONTEXT:", context)
 
-    const { data, error } = await supabaseAdmin
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
+  const userId =
+    context.userId ||
+    context.user?.id ||
+    context.auth?.user?.id
 
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
+  console.log("RESOLVED USER ID:", userId)
 
-    return {
-      isAdmin: !!data,
-    };
-  });
+   const { data, error } = await supabaseAdmin
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", context.userId)
+    .eq("role", "admin")
+    .maybeSingle();
+
+   console.log("SERVER DATA:", data);
+  console.log("SERVER ERROR:", error);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { isAdmin: Boolean(data) };
+});
