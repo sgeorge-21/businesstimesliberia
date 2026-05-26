@@ -18,7 +18,7 @@ export const getAdminStatus = createServerFn({ method: "GET" })
    const { data, error } = await supabaseAdmin
     .from("user_roles")
     .select("role")
-    .eq("user_id", context.userId)
+   .eq("user_id", userId)
     .eq("role", "admin")
     .maybeSingle();
 
