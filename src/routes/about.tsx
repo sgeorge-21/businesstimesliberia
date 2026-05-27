@@ -27,7 +27,7 @@ function AboutPage() {
           <div className="about-label">Meet The Host</div>
           <h2>James T. Worquea III</h2>
           <div className="host-card">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="James T. Worquea III" />
+            <img src="1000171686.jpg" alt="James T. Worquea III" />
             <div>
               <h3>James T. Worquea III</h3>
               <div className="host-role">Host & Executive Producer — The Liberian Business Hour</div>
