@@ -414,6 +414,55 @@ function UsersPanel() {
         </table>
       </div>
     </div>
+    </>
+  );
+}
+
+function CreateUserForm({ onCreated }: { onCreated: () => void }) {
+  const createUser = useServerFn(adminCreateUser);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [makeAdmin, setMakeAdmin] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true); setMsg(null);
+    try {
+      await createUser({ data: { email, password, displayName: displayName || undefined, makeAdmin } });
+      setMsg(`✓ Created ${email}${makeAdmin ? " (admin)" : ""}`);
+      setEmail(""); setPassword(""); setDisplayName(""); setMakeAdmin(false);
+      onCreated();
+    } catch (err: any) {
+      setMsg("✗ " + (err.message || "Failed"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="admin-card" style={{ marginBottom: "1.5rem" }}>
+      <div className="admin-card-header">Create New User Account</div>
+      <div className="admin-card-body">
+        <form onSubmit={submit}>
+          <div className="admin-form-row">
+            <div className="admin-form-group"><label>Email *</label><input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
+            <div className="admin-form-group"><label>Temporary Password *</label><input type="text" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min 6 characters" /></div>
+          </div>
+          <div className="admin-form-row">
+            <div className="admin-form-group"><label>Display Name</label><input value={displayName} onChange={(e) => setDisplayName(e.target.value)} /></div>
+            <div className="admin-form-group" style={{ display: "flex", alignItems: "center", gap: 8, paddingTop: 24 }}>
+              <input id="mkadmin" type="checkbox" checked={makeAdmin} onChange={(e) => setMakeAdmin(e.target.checked)} />
+              <label htmlFor="mkadmin" style={{ margin: 0 }}>Grant admin privileges</label>
+            </div>
+          </div>
+          {msg && <p style={{ fontSize: 13, marginBottom: ".75rem", color: msg.startsWith("✓") ? "var(--green-dark)" : "#c0392b" }}>{msg}</p>}
+          <div className="admin-btn-row"><button className="btn-publish" disabled={busy} type="submit">{busy ? "Creating..." : "Create User →"}</button></div>
+        </form>
+      </div>
+    </div>
   );
 }
 
