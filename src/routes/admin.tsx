@@ -387,6 +387,9 @@ function UsersPanel() {
   }
 
   return (
+  return (
+    <>
+      <CreateUserForm onCreated={load} />
     <div className="admin-card">
       <div className="admin-card-header">All Users <span className="badge">{rows.length}</span></div>
       <div className="admin-card-body" style={{ padding: 0 }}>
