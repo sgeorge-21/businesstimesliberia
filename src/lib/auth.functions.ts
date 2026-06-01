@@ -6,14 +6,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 export const getAdminStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-  console.log("SERVER CONTEXT:", context)
-
-  const userId =
-    context.userId ||
-    context.user?.id ||
-    context.auth?.user?.id
-
-  console.log("RESOLVED USER ID:", userId)
+  const userId = context.userId;
 
    const { data, error } = await supabaseAdmin
     .from("user_roles")
