@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { adminCreateUser } from "@/lib/admin.functions";
+import { adminCreateUser, adminGrantRole, adminRevokeRole, ROLE_VALUES, type RoleValue } from "@/lib/admin.functions";
 import Layout from "@/components/lbh/Layout";
 
 export const Route = createFileRoute("/admin")({ component: AdminPage });
@@ -359,13 +359,24 @@ function VideoForm({ onDone }: { onDone: () => void }) {
   );
 }
 
+const ROLE_LABELS: Record<RoleValue, string> = {
+  admin: "Admin",
+  editor: "Editor",
+  reporter: "Reporter",
+  contributor: "Contributor",
+  author: "Author",
+  subscriber: "Subscriber",
+};
+
 function UsersPanel() {
   const [rows, setRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const grantRole = useServerFn(adminGrantRole);
+  const revokeRole = useServerFn(adminRevokeRole);
 
   async function load() {
     setLoading(true);
-    const { data: profiles } = await supabase.from("profiles").select("id, display_name, created_at").order("created_at", { ascending: false });
+    const { data: profiles } = await supabase.from("profiles").select("id, display_name, email, created_at").order("created_at", { ascending: false });
     const { data: roles } = await supabase.from("user_roles").select("user_id, role");
     const byUser = new Map<string, string[]>();
     (roles || []).forEach((r: any) => {
@@ -377,42 +388,64 @@ function UsersPanel() {
   }
   useEffect(() => { load(); }, []);
 
-  async function toggleAdmin(userId: string, isAdmin: boolean) {
-    if (isAdmin) {
-      await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", "admin");
-    } else {
-      await supabase.from("user_roles").insert({ user_id: userId, role: "admin" });
-    }
-    load();
+  async function handleGrant(userId: string, role: RoleValue) {
+    try { await grantRole({ data: { userId, role } }); await load(); }
+    catch (e: any) { alert(e.message || "Failed to grant"); }
+  }
+  async function handleRevoke(userId: string, role: RoleValue) {
+    try { await revokeRole({ data: { userId, role } }); await load(); }
+    catch (e: any) { alert(e.message || "Failed to revoke"); }
   }
 
   return (
     <>
       <CreateUserForm onCreated={load} />
-    <div className="admin-card">
-      <div className="admin-card-header">All Users <span className="badge">{rows.length}</span></div>
-      <div className="admin-card-body" style={{ padding: 0 }}>
-        <table className="content-table">
-          <thead><tr><th>Display Name</th><th>User ID</th><th>Joined</th><th>Roles</th><th>Actions</th></tr></thead>
-          <tbody>
-            {loading && <tr><td colSpan={5} style={{ textAlign: "center", padding: "1.5rem" }}>Loading…</td></tr>}
-            {!loading && rows.length === 0 && <tr><td colSpan={5} style={{ textAlign: "center", padding: "1.5rem", color: "var(--text-light)" }}>No users yet.</td></tr>}
-            {rows.map((r) => {
-              const isA = r.roles.includes("admin");
-              return (
-                <tr key={r.id}>
-                  <td>{r.display_name || "—"}</td>
-                  <td style={{ fontFamily: "monospace", fontSize: 11 }}>{r.id.slice(0, 8)}…</td>
-                  <td>{new Date(r.created_at).toLocaleDateString()}</td>
-                  <td>{isA ? <span className="status-badge status-published">Admin</span> : <span className="status-badge status-draft">User</span>}</td>
-                  <td><button className={isA ? "btn-delete" : "btn-edit"} onClick={() => toggleAdmin(r.id, isA)}>{isA ? "Revoke Admin" : "Make Admin"}</button></td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div className="admin-card">
+        <div className="admin-card-header">All Users <span className="badge">{rows.length}</span></div>
+        <div className="admin-card-body" style={{ padding: 0 }}>
+          <table className="content-table">
+            <thead><tr><th>User</th><th>Joined</th><th>Roles</th><th>Grant Role</th></tr></thead>
+            <tbody>
+              {loading && <tr><td colSpan={4} style={{ textAlign: "center", padding: "1.5rem" }}>Loading…</td></tr>}
+              {!loading && rows.length === 0 && <tr><td colSpan={4} style={{ textAlign: "center", padding: "1.5rem", color: "var(--text-light)" }}>No users yet.</td></tr>}
+              {rows.map((r) => {
+                const userRoles = r.roles as RoleValue[];
+                const available = ROLE_VALUES.filter((rv) => !userRoles.includes(rv));
+                return (
+                  <tr key={r.id}>
+                    <td>
+                      <div style={{ fontWeight: 600 }}>{r.display_name || "—"}</div>
+                      <div style={{ fontSize: 12, color: "var(--text-light)" }}>{r.email || r.id.slice(0, 8) + "…"}</div>
+                    </td>
+                    <td>{new Date(r.created_at).toLocaleDateString()}</td>
+                    <td>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                        {userRoles.length === 0 && <span style={{ color: "var(--text-light)", fontSize: 12 }}>No roles</span>}
+                        {userRoles.map((role) => (
+                          <span key={role} style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "var(--cream-light)", border: "1px solid var(--lbh-border)", borderRadius: 12, padding: "2px 8px", fontSize: 12 }}>
+                            {ROLE_LABELS[role] || role}
+                            <button onClick={() => handleRevoke(r.id, role)} title="Revoke" style={{ background: "none", border: "none", cursor: "pointer", color: "#c0392b", fontWeight: 700, padding: 0, lineHeight: 1 }}>×</button>
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td>
+                      {available.length === 0 ? (
+                        <span style={{ fontSize: 12, color: "var(--text-light)" }}>All granted</span>
+                      ) : (
+                        <select defaultValue="" onChange={(e) => { const v = e.target.value as RoleValue; if (v) { handleGrant(r.id, v); e.target.value = ""; } }}>
+                          <option value="">+ Grant role…</option>
+                          {available.map((rv) => <option key={rv} value={rv}>{ROLE_LABELS[rv]}</option>)}
+                        </select>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
     </>
   );
 }
@@ -422,17 +455,21 @@ function CreateUserForm({ onCreated }: { onCreated: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [makeAdmin, setMakeAdmin] = useState(false);
+  const [roles, setRoles] = useState<RoleValue[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+
+  function toggleRole(role: RoleValue) {
+    setRoles((prev) => prev.includes(role) ? prev.filter((r) => r !== role) : [...prev, role]);
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true); setMsg(null);
     try {
-      await createUser({ data: { email, password, displayName: displayName || undefined, makeAdmin } });
-      setMsg(`✓ Created ${email}${makeAdmin ? " (admin)" : ""}`);
-      setEmail(""); setPassword(""); setDisplayName(""); setMakeAdmin(false);
+      await createUser({ data: { email, password, displayName: displayName || undefined, roles } });
+      setMsg(`✓ Created ${email}${roles.length ? ` (${roles.join(", ")})` : ""}`);
+      setEmail(""); setPassword(""); setDisplayName(""); setRoles([]);
       onCreated();
     } catch (err: any) {
       setMsg("✗ " + (err.message || "Failed"));
@@ -450,11 +487,16 @@ function CreateUserForm({ onCreated }: { onCreated: () => void }) {
             <div className="admin-form-group"><label>Email *</label><input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
             <div className="admin-form-group"><label>Temporary Password *</label><input type="text" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min 6 characters" /></div>
           </div>
-          <div className="admin-form-row">
-            <div className="admin-form-group"><label>Display Name</label><input value={displayName} onChange={(e) => setDisplayName(e.target.value)} /></div>
-            <div className="admin-form-group" style={{ display: "flex", alignItems: "center", gap: 8, paddingTop: 24 }}>
-              <input id="mkadmin" type="checkbox" checked={makeAdmin} onChange={(e) => setMakeAdmin(e.target.checked)} />
-              <label htmlFor="mkadmin" style={{ margin: 0 }}>Grant admin privileges</label>
+          <div className="admin-form-group"><label>Display Name</label><input value={displayName} onChange={(e) => setDisplayName(e.target.value)} /></div>
+          <div className="admin-form-group">
+            <label>Assign Roles</label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, padding: "8px 0" }}>
+              {ROLE_VALUES.map((rv) => (
+                <label key={rv} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, cursor: "pointer" }}>
+                  <input type="checkbox" checked={roles.includes(rv)} onChange={() => toggleRole(rv)} />
+                  {ROLE_LABELS[rv]}
+                </label>
+              ))}
             </div>
           </div>
           {msg && <p style={{ fontSize: 13, marginBottom: ".75rem", color: msg.startsWith("✓") ? "var(--green-dark)" : "#c0392b" }}>{msg}</p>}
