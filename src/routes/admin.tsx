@@ -387,7 +387,6 @@ function UsersPanel() {
   }
 
   return (
-  return (
     <>
       <CreateUserForm onCreated={load} />
     <div className="admin-card">
