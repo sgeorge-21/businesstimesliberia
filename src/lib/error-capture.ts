@@ -2,17 +2,22 @@
 // when h3 has already swallowed the throw into a generic 500 Response.
 
 let lastCapturedError: { error: unknown; at: number } | undefined;
+let isInstalled = false;
 const TTL_MS = 5_000;
 
 function record(error: unknown) {
   lastCapturedError = { error, at: Date.now() };
 }
 
-if (typeof globalThis.addEventListener === "function") {
+export function installErrorCapture() {
+  if (isInstalled || typeof globalThis.addEventListener !== "function") return;
+
   globalThis.addEventListener("error", (event) => record((event as ErrorEvent).error ?? event));
   globalThis.addEventListener("unhandledrejection", (event) =>
     record((event as PromiseRejectionEvent).reason),
   );
+
+  isInstalled = true;
 }
 
 export function consumeLastCapturedError(): unknown {
