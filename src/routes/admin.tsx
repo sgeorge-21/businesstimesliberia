@@ -53,8 +53,6 @@ function AdminPage() {
     );
   }
 
-  return (
-    <div className="lbh-app">
   const navItems: [Tab, string][] = [
     ["dashboard", "Dashboard"],
     ["news", "Add News / Story"],
