@@ -55,18 +55,42 @@ function AdminPage() {
 
   return (
     <div className="lbh-app">
+  const navItems: [Tab, string][] = [
+    ["dashboard", "Dashboard"],
+    ["news", "Add News / Story"],
+    ["podcast", "Add Podcast"],
+    ["video", "Add Video"],
+    ["users", "Users"],
+    ["manage", "Manage Content"],
+  ];
+
+  return (
+    <div className="lbh-app">
       <div className="admin-panel">
         <div className="admin-nav">
-          <div className="a-brand">LBH <span>Admin</span></div>
+          <div className="admin-nav-left">
+            <Sheet>
+              <SheetTrigger asChild>
+                <button type="button" className="admin-menu-btn" aria-label="Open menu"><Menu size={20} /></button>
+              </SheetTrigger>
+              <SheetContent side="left" className="admin-mobile-sheet">
+                <SheetTitle className="admin-mobile-title">Admin</SheetTitle>
+                <div className="admin-mobile-links">
+                  {navItems.map(([k, label]) => (
+                    <SheetClose asChild key={k}>
+                      <a className={tab === k ? "active" : ""} onClick={() => setTab(k)}>{label}</a>
+                    </SheetClose>
+                  ))}
+                  <SheetClose asChild>
+                    <Link to="/">↗ View Site</Link>
+                  </SheetClose>
+                </div>
+              </SheetContent>
+            </Sheet>
+            <div className="a-brand">LBH <span>Admin</span></div>
+          </div>
           <div className="admin-nav-links">
-            {([
-              ["dashboard", "Dashboard"],
-              ["news", "Add News / Story"],
-              ["podcast", "Add Podcast"],
-              ["video", "Add Video"],
-              ["users", "Users"],
-              ["manage", "Manage Content"],
-            ] as [Tab, string][]).map(([k, label]) => (
+            {navItems.map(([k, label]) => (
               <a key={k} className={tab === k ? "active" : ""} onClick={() => setTab(k)}>{label}</a>
             ))}
             <Link to="/" style={{ color: "rgba(255,255,255,.7)", fontSize: 13 }}>↗ View Site</Link>
