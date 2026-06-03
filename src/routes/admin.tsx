@@ -1,9 +1,11 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { adminCreateUser, adminGrantRole, adminRevokeRole, ROLE_VALUES, type RoleValue } from "@/lib/admin.functions";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import Layout from "@/components/lbh/Layout";
 
 export const Route = createFileRoute("/admin")({ component: AdminPage });
