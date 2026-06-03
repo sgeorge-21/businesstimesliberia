@@ -113,7 +113,7 @@ function AdminPage() {
 
 function Dashboard() {
   const [counts, setCounts] = useState({ stories: 0, podcasts: 0, videos: 0, users: 0 });
-  const [recent, setRecent] = useState<any[]>([]);
+  const [recent, setRecent] = useState<Array<Record<string, unknown>>>([]);
   useEffect(() => {
     (async () => {
       const [s, p, v, u] = await Promise.all([
