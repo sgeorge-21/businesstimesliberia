@@ -53,14 +53,14 @@ function AdminPage() {
     );
   }
 
-  const navItems: [Tab, string][] = [
+  const navItems = [
     ["dashboard", "Dashboard"],
     ["news", "Add News / Story"],
     ["podcast", "Add Podcast"],
     ["video", "Add Video"],
     ["users", "Users"],
     ["manage", "Manage Content"],
-  ];
+  ] as [Tab, string][];
 
   return (
     <div className="lbh-app">
