@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import Layout, { ShowSidebar } from "@/components/lbh/Layout";
-import hostPhoto from "@/james-t-worquea.jpg";
+import hostPhoto from "@/assets/1000171686 (1).jpg";
 
 export const Route = createFileRoute("/about")({ component: AboutPage });
 
