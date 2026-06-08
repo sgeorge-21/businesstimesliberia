@@ -7,5 +7,14 @@
   "assets": {
     "directory": "dist/client",
     "binding": "ASSETS"
+  },
+  "build": {
+    "command": "npm run build",
+    "cwd": ".",
+    "watch_paths": ["src/**/*.ts", "src/**/*.tsx"]
+  },
+  "alias": {
+    "tanstack-start-manifest:v": "dist/manifest.json",
+    "tanstack-start-injected-head-scripts:v": "dist/server/injected-head-scripts.js"
   }
 }
