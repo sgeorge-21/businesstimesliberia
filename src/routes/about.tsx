@@ -11,7 +11,7 @@ function AboutPage() {
       <div className="about-hero">
         <div className="label">Who We Are</div>
         <h1>Informing Liberia's Business Community</h1>
-        <p>The Liberian Business Hour is Liberia's most trusted weekly business radio program — bringing in-depth analysis, expert interviews, and the stories that matter most to Liberian entrep[...]
+        <p>The Liberian Business Hour is Liberia's most trusted weekly business radio program — bringing in-depth analysis, expert interviews, and the stories that matter most to Liberian entrepreneurs, investors, and professionals.</p>
       </div>
       <div className="stats-banner">
         <div className="stat-item"><div className="stat-label2">Broadcast</div><div className="stat-val">Weekly</div></div>
