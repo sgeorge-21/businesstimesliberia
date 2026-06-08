@@ -22,8 +22,8 @@ function AboutPage() {
         <div className="about-content">
           <div className="about-label">About The Show</div>
           <h2>Liberia's Premier Business Radio Program</h2>
-          <p>The Liberian Business Hour is a weekly radio program that airs every Saturday from 7:00 to 7:45 AM in Monrovia, Liberia. For those who miss the live broadcast, the show repeats every [...]
-          <p>Founded with the mission to inform, educate, and empower Liberia's business community, the show covers everything from macroeconomic policy and banking reform to entrepreneurship, agr[...]
+          <p>The Liberian Business Hour is a weekly radio program that airs every Saturday from 7:00 to 7:45 AM in Monrovia, Liberia. For those who miss the live broadcast, the show repeats every Sunday.</p>
+          <p>Founded with the mission to inform, educate, and empower Liberia's business community, the show covers everything from macroeconomic policy and banking reform to entrepreneurship, agriculture, and trade.</p>
           <div className="about-label">Meet The Host</div>
           <h2>James T. Worquea III</h2>
           <div className="host-card">
