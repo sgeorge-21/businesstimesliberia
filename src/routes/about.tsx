@@ -31,7 +31,7 @@ function AboutPage() {
             <div>
               <h3>James T. Worquea III</h3>
               <div className="host-role">Host & Executive Producer — The Liberian Business Hour</div>
-              <p>James T. Worquea III is a Liberian business journalist, radio host, and economic commentator. As the host and executive producer of The Liberian Business Hour, he has established [...]
+              <p>James T. Worquea III is a Liberian business journalist, radio host, and economic commentator. As the host and executive producer of The Liberian Business Hour, he has established himself as a leading voice in Liberia's business media landscape.</p>
               <p>His weekly program reaches thousands of business owners, entrepreneurs, investors, and professionals across Liberia and the diaspora.</p>
               <div className="social-pills">
                 <span className="social-pill">Facebook</span>
