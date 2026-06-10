@@ -10,7 +10,7 @@ import Layout from "@/components/lbh/Layout";
 
 export const Route = createFileRoute("/admin")({ component: AdminPage });
 
-type Tab = "dashboard" | "news" | "podcast" | "video" | "users" | "manage";
+type Tab = "dashboard" | "news" | "podcast" | "video" | "ads" | "trending" | "rates" | "users" | "manage";
 
 function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
@@ -58,6 +58,9 @@ function AdminPage() {
     ["news", "Add News / Story"],
     ["podcast", "Add Podcast"],
     ["video", "Add Video"],
+    ["ads", "Ads"],
+    ["trending", "Trending"],
+    ["rates", "CBL Rates"],
     ["users", "Users"],
     ["manage", "Manage Content"],
   ] as [Tab, string][];
@@ -100,6 +103,9 @@ function AdminPage() {
           {tab === "news" && <NewsForm onDone={() => showToast("Story published!")} />}
           {tab === "podcast" && <PodcastForm onDone={() => showToast("Episode published!")} />}
           {tab === "video" && <VideoForm onDone={() => showToast("Video published!")} />}
+          {tab === "ads" && <AdsPanel onToast={showToast} />}
+          {tab === "trending" && <TrendingPanel onToast={showToast} />}
+          {tab === "rates" && <RatesPanel onToast={showToast} />}
           {tab === "users" && <UsersPanel />}
           {tab === "manage" && <ManagePanel />}
         </div>
@@ -586,5 +592,232 @@ function ManagePanel() {
         </table>
       </div>
     </div>
+  );
+}
+
+// ----- Ads management -----
+function AdsPanel({ onToast }: { onToast: (m: string) => void }) {
+  const [rows, setRows] = useState<any[]>([]);
+  const [title, setTitle] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [placement, setPlacement] = useState<"top" | "sidebar">("top");
+  const [busy, setBusy] = useState(false);
+
+  async function load() {
+    const { data } = await supabase.from("ads").select("*").order("placement").order("sort_order");
+    setRows(data || []);
+  }
+  useEffect(() => { load(); }, []);
+
+  async function create() {
+    if (!title) return alert("Title required");
+    let url = imageUrl;
+    if (imageFile) {
+      const u = await uploadFile(imageFile, "ads");
+      if (!u) return;
+      url = u;
+    }
+    if (!url) return alert("Upload an image or paste an image URL");
+    setBusy(true);
+    const { error } = await supabase.from("ads").insert({ title, image_url: url, link_url: linkUrl || null, placement, active: true });
+    setBusy(false);
+    if (error) return alert(error.message);
+    setTitle(""); setImageFile(null); setImageUrl(""); setLinkUrl(""); setPlacement("top");
+    onToast("Ad created"); load();
+  }
+  async function toggle(id: string, active: boolean) { await supabase.from("ads").update({ active: !active }).eq("id", id); load(); }
+  async function del(id: string) { if (!confirm("Delete ad?")) return; await supabase.from("ads").delete().eq("id", id); load(); }
+
+  return (
+    <>
+      <div className="admin-card" style={{ marginBottom: "1.5rem" }}>
+        <div className="admin-card-header">Create Ad Banner</div>
+        <div className="admin-card-body">
+          <div className="admin-form-row">
+            <div className="admin-form-group"><label>Title / Sponsor *</label><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Lonestar MTN promo" /></div>
+            <div className="admin-form-group"><label>Placement</label>
+              <select value={placement} onChange={(e) => setPlacement(e.target.value as any)}>
+                <option value="top">Top of pages (banner)</option>
+                <option value="sidebar">Sidebar</option>
+              </select>
+            </div>
+          </div>
+          <div className="admin-form-group"><label>Click-through URL</label><input type="url" value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} placeholder="https://..." /></div>
+          <div className="admin-form-row">
+            <div className="admin-form-group"><label>Upload Image</label>
+              <label className="file-upload-area" style={{ display: "block" }}>
+                <div style={{ fontSize: "2rem" }}>🖼️</div>
+                <p>{imageFile ? imageFile.name : "Click to upload"}</p>
+                <small>Top banner: ~1200×140 · Sidebar: ~600×500</small>
+                <input type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
+              </label>
+            </div>
+            <div className="admin-form-group"><label>…or Image URL</label><input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." /></div>
+          </div>
+          <div className="admin-btn-row"><button className="btn-publish" disabled={busy} onClick={create}>{busy ? "..." : "Create Ad →"}</button></div>
+        </div>
+      </div>
+
+      <div className="admin-card">
+        <div className="admin-card-header">All Ads <span className="badge">{rows.length}</span></div>
+        <div className="admin-card-body" style={{ padding: 0 }}>
+          <table className="content-table">
+            <thead><tr><th>Preview</th><th>Title</th><th>Placement</th><th>Link</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              {rows.length === 0 && <tr><td colSpan={6} style={{ textAlign: "center", padding: "1.5rem", color: "var(--text-light)" }}>No ads yet.</td></tr>}
+              {rows.map((r) => (
+                <tr key={r.id}>
+                  <td><img src={r.image_url} style={{ width: 80, height: 50, objectFit: "cover", borderRadius: 4 }} alt="" /></td>
+                  <td>{r.title}</td>
+                  <td>{r.placement}</td>
+                  <td style={{ fontSize: 12 }}>{r.link_url ? <a href={r.link_url} target="_blank" rel="noopener noreferrer">link</a> : "—"}</td>
+                  <td><span className={`status-badge status-${r.active ? "published" : "draft"}`}>{r.active ? "active" : "paused"}</span></td>
+                  <td><div className="action-btns">
+                    <button className="btn-edit" onClick={() => toggle(r.id, r.active)}>{r.active ? "Pause" : "Activate"}</button>
+                    <button className="btn-delete" onClick={() => del(r.id)}>Delete</button>
+                  </div></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ----- Trending management -----
+function TrendingPanel({ onToast }: { onToast: (m: string) => void }) {
+  const [rows, setRows] = useState<any[]>([]);
+  const [title, setTitle] = useState("");
+  const [url, setUrl] = useState("");
+  async function load() {
+    const { data } = await supabase.from("trending_items").select("*").order("position");
+    setRows(data || []);
+  }
+  useEffect(() => { load(); }, []);
+  async function create() {
+    if (!title) return alert("Title required");
+    const max = rows.reduce((m, r) => Math.max(m, r.position || 0), 0);
+    const { error } = await supabase.from("trending_items").insert({ title, url: url || null, position: max + 1, active: true });
+    if (error) return alert(error.message);
+    setTitle(""); setUrl(""); onToast("Trending item added"); load();
+  }
+  async function toggle(id: string, active: boolean) { await supabase.from("trending_items").update({ active: !active }).eq("id", id); load(); }
+  async function del(id: string) { if (!confirm("Delete?")) return; await supabase.from("trending_items").delete().eq("id", id); load(); }
+  async function move(id: string, dir: -1 | 1) {
+    const idx = rows.findIndex((r) => r.id === id);
+    const swap = rows[idx + dir];
+    if (!swap) return;
+    const a = rows[idx];
+    await supabase.from("trending_items").update({ position: swap.position }).eq("id", a.id);
+    await supabase.from("trending_items").update({ position: a.position }).eq("id", swap.id);
+    load();
+  }
+  return (
+    <>
+      <div className="admin-card" style={{ marginBottom: "1.5rem" }}>
+        <div className="admin-card-header">Add Trending Headline</div>
+        <div className="admin-card-body">
+          <div className="admin-form-row">
+            <div className="admin-form-group"><label>Headline *</label><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. CBL raises minimum capital..." /></div>
+            <div className="admin-form-group"><label>Link (optional)</label><input type="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://..." /></div>
+          </div>
+          <div className="admin-btn-row"><button className="btn-publish" onClick={create}>Add →</button></div>
+        </div>
+      </div>
+      <div className="admin-card">
+        <div className="admin-card-header">Trending List <span className="badge">{rows.length}</span></div>
+        <div className="admin-card-body" style={{ padding: 0 }}>
+          <table className="content-table">
+            <thead><tr><th>#</th><th>Headline</th><th>Link</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              {rows.length === 0 && <tr><td colSpan={5} style={{ textAlign: "center", padding: "1.5rem", color: "var(--text-light)" }}>No trending items.</td></tr>}
+              {rows.map((r, i) => (
+                <tr key={r.id}>
+                  <td>{i + 1}</td>
+                  <td>{r.title}</td>
+                  <td style={{ fontSize: 12 }}>{r.url ? <a href={r.url} target="_blank" rel="noopener noreferrer">link</a> : "—"}</td>
+                  <td><span className={`status-badge status-${r.active ? "published" : "draft"}`}>{r.active ? "active" : "hidden"}</span></td>
+                  <td><div className="action-btns">
+                    <button className="btn-edit" onClick={() => move(r.id, -1)}>↑</button>
+                    <button className="btn-edit" onClick={() => move(r.id, 1)}>↓</button>
+                    <button className="btn-edit" onClick={() => toggle(r.id, r.active)}>{r.active ? "Hide" : "Show"}</button>
+                    <button className="btn-delete" onClick={() => del(r.id)}>Delete</button>
+                  </div></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ----- CBL Rates management -----
+function RatesPanel({ onToast }: { onToast: (m: string) => void }) {
+  const [rows, setRows] = useState<any[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [log, setLog] = useState<string>("");
+
+  async function load() {
+    const { data } = await supabase.from("cbl_rates").select("*").order("currency");
+    setRows(data || []);
+  }
+  useEffect(() => { load(); }, []);
+
+  async function save(id: string, field: "buy_rate" | "sell_rate", value: string) {
+    const v = parseFloat(value);
+    if (Number.isNaN(v)) return;
+    await supabase.from("cbl_rates").update({ [field]: v, fetched_at: new Date().toISOString(), source: "manual" }).eq("id", id);
+    load();
+  }
+
+  async function scrapeNow() {
+    setBusy(true); setLog("Fetching from cbl.org.lr…");
+    try {
+      const res = await fetch("/api/public/hooks/scrape-cbl-rates", { method: "POST" });
+      const json = await res.json();
+      setLog(JSON.stringify(json, null, 2));
+      if (json.success) onToast(`Rates updated (${(json.updated || []).join(", ") || "none"})`);
+      else onToast("Scrape finished with errors — see log");
+      load();
+    } catch (e: any) {
+      setLog("Error: " + (e?.message || String(e)));
+    } finally { setBusy(false); }
+  }
+
+  return (
+    <>
+      <div className="admin-card" style={{ marginBottom: "1.5rem" }}>
+        <div className="admin-card-header">CBL Daily Exchange Rates
+          <button className="btn-publish" style={{ float: "right" }} disabled={busy} onClick={scrapeNow}>{busy ? "Fetching..." : "Fetch from CBL now"}</button>
+        </div>
+        <div className="admin-card-body">
+          <p style={{ fontSize: 13, color: "var(--text-mid)", marginBottom: "1rem" }}>
+            Rates are scraped from <a href="https://www.cbl.org.lr/" target="_blank" rel="noopener noreferrer">cbl.org.lr</a> daily.
+            You can also override any value manually below; manual edits persist until the next successful scrape.
+          </p>
+          <table className="content-table">
+            <thead><tr><th>Currency</th><th>Buy (LRD)</th><th>Sell (LRD)</th><th>Source</th><th>Updated</th></tr></thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.id}>
+                  <td><strong>{r.currency}</strong></td>
+                  <td><input defaultValue={r.buy_rate ?? ""} onBlur={(e) => save(r.id, "buy_rate", e.target.value)} style={{ width: 100 }} /></td>
+                  <td><input defaultValue={r.sell_rate ?? ""} onBlur={(e) => save(r.id, "sell_rate", e.target.value)} style={{ width: 100 }} /></td>
+                  <td style={{ fontSize: 12 }}>{r.source}</td>
+                  <td style={{ fontSize: 12 }}>{new Date(r.fetched_at).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {log && <pre style={{ marginTop: "1rem", background: "var(--cream-light)", padding: 12, borderRadius: 4, fontSize: 11, maxHeight: 220, overflow: "auto" }}>{log}</pre>}
+        </div>
+      </div>
+    </>
   );
 }

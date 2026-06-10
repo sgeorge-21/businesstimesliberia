@@ -19,6 +19,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StoriesSlugRouteImport } from './routes/stories.$slug'
+import { Route as ApiPublicHooksScrapeCblRatesRouteImport } from './routes/api/public/hooks/scrape-cbl-rates'
 
 const StoriesRoute = StoriesRouteImport.update({
   id: '/stories',
@@ -70,6 +71,12 @@ const StoriesSlugRoute = StoriesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => StoriesRoute,
 } as any)
+const ApiPublicHooksScrapeCblRatesRoute =
+  ApiPublicHooksScrapeCblRatesRouteImport.update({
+    id: '/api/public/hooks/scrape-cbl-rates',
+    path: '/api/public/hooks/scrape-cbl-rates',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/podcast': typeof PodcastRoute
   '/stories': typeof StoriesRouteWithChildren
   '/stories/$slug': typeof StoriesSlugRoute
+  '/api/public/hooks/scrape-cbl-rates': typeof ApiPublicHooksScrapeCblRatesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -94,6 +102,7 @@ export interface FileRoutesByTo {
   '/podcast': typeof PodcastRoute
   '/stories': typeof StoriesRouteWithChildren
   '/stories/$slug': typeof StoriesSlugRoute
+  '/api/public/hooks/scrape-cbl-rates': typeof ApiPublicHooksScrapeCblRatesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,6 +116,7 @@ export interface FileRoutesById {
   '/podcast': typeof PodcastRoute
   '/stories': typeof StoriesRouteWithChildren
   '/stories/$slug': typeof StoriesSlugRoute
+  '/api/public/hooks/scrape-cbl-rates': typeof ApiPublicHooksScrapeCblRatesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/podcast'
     | '/stories'
     | '/stories/$slug'
+    | '/api/public/hooks/scrape-cbl-rates'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/podcast'
     | '/stories'
     | '/stories/$slug'
+    | '/api/public/hooks/scrape-cbl-rates'
   id:
     | '__root__'
     | '/'
@@ -145,6 +157,7 @@ export interface FileRouteTypes {
     | '/podcast'
     | '/stories'
     | '/stories/$slug'
+    | '/api/public/hooks/scrape-cbl-rates'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -157,6 +170,7 @@ export interface RootRouteChildren {
   FinanceRoute: typeof FinanceRoute
   PodcastRoute: typeof PodcastRoute
   StoriesRoute: typeof StoriesRouteWithChildren
+  ApiPublicHooksScrapeCblRatesRoute: typeof ApiPublicHooksScrapeCblRatesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -231,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoriesSlugRouteImport
       parentRoute: typeof StoriesRoute
     }
+    '/api/public/hooks/scrape-cbl-rates': {
+      id: '/api/public/hooks/scrape-cbl-rates'
+      path: '/api/public/hooks/scrape-cbl-rates'
+      fullPath: '/api/public/hooks/scrape-cbl-rates'
+      preLoaderRoute: typeof ApiPublicHooksScrapeCblRatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -255,6 +276,7 @@ const rootRouteChildren: RootRouteChildren = {
   FinanceRoute: FinanceRoute,
   PodcastRoute: PodcastRoute,
   StoriesRoute: StoriesRouteWithChildren,
+  ApiPublicHooksScrapeCblRatesRoute: ApiPublicHooksScrapeCblRatesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
