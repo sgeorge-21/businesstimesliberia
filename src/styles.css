@@ -482,3 +482,25 @@ body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-li
   .lbh-app .admin-menu-btn { display:inline-flex; }
   .lbh-app .admin-nav { padding:0 1rem; }
 }
+
+/* CBL Rates ticker */
+.rates-ticker { background:#0b2545; color:#fff; overflow:hidden; display:flex; align-items:center; font-size:13px; border-bottom:1px solid #001f3f; }
+.rates-ticker-label { background:var(--gold,#c9a227); color:#0b2545; padding:6px 14px; font-weight:700; font-size:12px; letter-spacing:.4px; text-transform:uppercase; flex-shrink:0; }
+.rates-ticker-track { display:flex; gap:2.5rem; padding:6px 1rem; white-space:nowrap; animation:rates-scroll 35s linear infinite; }
+.rates-ticker-item { display:inline-flex; gap:6px; align-items:center; }
+.rates-ticker-item strong { color:var(--gold,#c9a227); }
+@keyframes rates-scroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+
+/* Rates widget */
+.rates-widget-table { width:100%; border-collapse:collapse; font-size:13px; }
+.rates-widget-table th { text-align:left; color:var(--text-mid); font-weight:600; padding:6px 4px; border-bottom:1px solid var(--cream-light,#eee); font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
+.rates-widget-table td { padding:8px 4px; border-bottom:1px solid var(--cream-light,#f5f1ea); }
+.rates-widget-table tr:last-child td { border-bottom:none; }
+
+/* Ad slots */
+.ad-slot { margin:1.25rem auto; text-align:center; max-width:1200px; padding:0 1rem; }
+.ad-label { font-size:10px; color:var(--text-light,#999); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+.ad-img { display:block; margin:0 auto; max-width:100%; height:auto; border-radius:4px; }
+.ad-top .ad-img { max-height:140px; }
+.ad-slot-sidebar { padding:0; margin:1rem 0; }
+.ad-sidebar { width:100%; max-height:320px; object-fit:cover; }
