@@ -10,7 +10,7 @@ import Layout from "@/components/lbh/Layout";
 
 export const Route = createFileRoute("/admin")({ component: AdminPage });
 
-type Tab = "dashboard" | "news" | "podcast" | "video" | "users" | "manage";
+type Tab = "dashboard" | "news" | "podcast" | "video" | "ads" | "trending" | "rates" | "users" | "manage";
 
 function AdminPage() {
   const { user, isAdmin, loading } = useAuth();
@@ -58,6 +58,9 @@ function AdminPage() {
     ["news", "Add News / Story"],
     ["podcast", "Add Podcast"],
     ["video", "Add Video"],
+    ["ads", "Ads"],
+    ["trending", "Trending"],
+    ["rates", "CBL Rates"],
     ["users", "Users"],
     ["manage", "Manage Content"],
   ] as [Tab, string][];
@@ -100,6 +103,9 @@ function AdminPage() {
           {tab === "news" && <NewsForm onDone={() => showToast("Story published!")} />}
           {tab === "podcast" && <PodcastForm onDone={() => showToast("Episode published!")} />}
           {tab === "video" && <VideoForm onDone={() => showToast("Video published!")} />}
+          {tab === "ads" && <AdsPanel onToast={showToast} />}
+          {tab === "trending" && <TrendingPanel onToast={showToast} />}
+          {tab === "rates" && <RatesPanel onToast={showToast} />}
           {tab === "users" && <UsersPanel />}
           {tab === "manage" && <ManagePanel />}
         </div>
