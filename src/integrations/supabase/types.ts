@@ -14,6 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
+      ads: {
+        Row: {
+          active: boolean
+          created_at: string
+          end_at: string | null
+          id: string
+          image_url: string
+          link_url: string | null
+          placement: string
+          sort_order: number
+          start_at: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          end_at?: string | null
+          id?: string
+          image_url: string
+          link_url?: string | null
+          placement?: string
+          sort_order?: number
+          start_at?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          end_at?: string | null
+          id?: string
+          image_url?: string
+          link_url?: string | null
+          placement?: string
+          sort_order?: number
+          start_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      cbl_rates: {
+        Row: {
+          buy_rate: number | null
+          currency: string
+          fetched_at: string
+          id: string
+          sell_rate: number | null
+          source: string | null
+          updated_at: string
+        }
+        Insert: {
+          buy_rate?: number | null
+          currency: string
+          fetched_at?: string
+          id?: string
+          sell_rate?: number | null
+          source?: string | null
+          updated_at?: string
+        }
+        Update: {
+          buy_rate?: number | null
+          currency?: string
+          fetched_at?: string
+          id?: string
+          sell_rate?: number | null
+          source?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       podcasts: {
         Row: {
           air_date: string | null
@@ -137,6 +209,36 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      trending_items: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          position: number
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          position?: number
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          position?: number
+          title?: string
+          updated_at?: string
+          url?: string | null
         }
         Relationships: []
       }
