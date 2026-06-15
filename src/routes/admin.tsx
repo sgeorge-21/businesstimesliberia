@@ -772,7 +772,9 @@ function RatesPanel({ onToast }: { onToast: (m: string) => void }) {
   async function save(id: string, field: "buy_rate" | "sell_rate", value: string) {
     const v = parseFloat(value);
     if (Number.isNaN(v)) return;
-    const patch: Record<string, any> = { [field]: v, fetched_at: new Date().toISOString(), source: "manual" };
+    const patch = (field === "buy_rate"
+      ? { buy_rate: v, fetched_at: new Date().toISOString(), source: "manual" }
+      : { sell_rate: v, fetched_at: new Date().toISOString(), source: "manual" });
     await supabase.from("cbl_rates").update(patch).eq("id", id);
     load();
   }
