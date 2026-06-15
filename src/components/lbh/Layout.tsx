@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Menu } from "lucide-react";
+import { Menu, Facebook, Youtube, MessageCircle } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
 import {
@@ -86,9 +86,10 @@ export function Footer() {
             <div className="kear">Monrovia, Liberia</div>
             <p>Informing Liberia's business community one story at a time. Every Saturday morning.</p>
             <div className="social-row">
-              <div className="social-icon">f</div>
-              <div className="social-icon">𝕏</div>
-              <div className="social-icon">▶</div>
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" className="social-icon"><Facebook size={16} /></a>
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube" className="social-icon"><Youtube size={16} /></a>
+              <a href="https://wa.me/231000000000" target="_blank" rel="noreferrer" aria-label="WhatsApp" className="social-icon"><MessageCircle size={16} /></a>
+              <a href="https://x.com" target="_blank" rel="noreferrer" aria-label="X" className="social-icon">𝕏</a>
             </div>
           </div>
           <div className="footer-col">

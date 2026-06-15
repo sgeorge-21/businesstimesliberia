@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import Layout, { ShowSidebar } from "@/components/lbh/Layout";
 import { CardsGrid, ListCards } from "@/components/lbh/Cards";
 import { ECONOMY_CARDS, ECONOMY_LIST } from "@/components/lbh/data";
@@ -9,10 +10,29 @@ export const Route = createFileRoute("/economy")({ component: EconomyPage });
 
 const TABS = ["All Economy", "GDP & Growth", "Inflation", "Government Policy", "Agriculture", "Employment"];
 
+type Rate = { currency: string; buy_rate: number | null; sell_rate: number | null; fetched_at: string };
+
 function EconomyPage() {
   const [tab, setTab] = useState(TABS[0]);
+  const [rates, setRates] = useState<Rate[]>([]);
   const cards = filterByTab(ECONOMY_CARDS, tab, TABS[0]);
   const list = filterByTab(ECONOMY_LIST, tab, TABS[0]);
+
+  useEffect(() => {
+    supabase
+      .from("cbl_rates")
+      .select("currency,buy_rate,sell_rate,fetched_at")
+      .order("currency")
+      .then(({ data }) => setRates((data as Rate[]) || []));
+  }, []);
+
+  const fmt = (cur: string) => {
+    const r = rates.find((x) => x.currency === cur);
+    if (!r || (r.buy_rate == null && r.sell_rate == null)) return "—";
+    const buy = r.buy_rate ?? 0, sell = r.sell_rate ?? 0;
+    return ((buy + sell) / 2).toFixed(2);
+  };
+  const updated = rates[0]?.fetched_at ? new Date(rates[0].fetched_at).toLocaleDateString() : "—";
 
   return (
     <Layout>
@@ -30,9 +50,9 @@ function EconomyPage() {
         <div>
           {tab === TABS[0] && (
             <div className="stats-row">
-              <div className="stat-cell"><div className="stat-label">GDP Growth (2026)</div><div className="stat-value">4.8%</div><div className="stat-change up">▲ 0.3% vs last year</div></div>
-              <div className="stat-cell"><div className="stat-label">USD / LRD</div><div className="stat-value">191.4</div><div className="stat-change down">▼ 0.8 today</div></div>
-              <div className="stat-cell"><div className="stat-label">National Budget</div><div className="stat-value">$713M</div><div className="stat-change up">▲ 8% vs FY2025</div></div>
+              <div className="stat-cell"><div className="stat-label">USD / LRD (mid)</div><div className="stat-value">{fmt("USD")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
+              <div className="stat-cell"><div className="stat-label">EUR / LRD (mid)</div><div className="stat-value">{fmt("EUR")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
+              <div className="stat-cell"><div className="stat-label">GBP / LRD (mid)</div><div className="stat-value">{fmt("GBP")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
             </div>
           )}
           <div className="section-label-sm">{tab === TABS[0] ? "Economy Headlines" : tab}</div>
