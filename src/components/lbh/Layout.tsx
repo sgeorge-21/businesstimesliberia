@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Menu } from "lucide-react";
+import { Menu, Facebook, Youtube, MessageCircle } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
 import {
