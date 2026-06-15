@@ -10,10 +10,29 @@ export const Route = createFileRoute("/economy")({ component: EconomyPage });
 
 const TABS = ["All Economy", "GDP & Growth", "Inflation", "Government Policy", "Agriculture", "Employment"];
 
+type Rate = { currency: string; buy_rate: number | null; sell_rate: number | null; fetched_at: string };
+
 function EconomyPage() {
   const [tab, setTab] = useState(TABS[0]);
+  const [rates, setRates] = useState<Rate[]>([]);
   const cards = filterByTab(ECONOMY_CARDS, tab, TABS[0]);
   const list = filterByTab(ECONOMY_LIST, tab, TABS[0]);
+
+  useEffect(() => {
+    supabase
+      .from("cbl_rates")
+      .select("currency,buy_rate,sell_rate,fetched_at")
+      .order("currency")
+      .then(({ data }) => setRates((data as Rate[]) || []));
+  }, []);
+
+  const fmt = (cur: string) => {
+    const r = rates.find((x) => x.currency === cur);
+    if (!r || (r.buy_rate == null && r.sell_rate == null)) return "—";
+    const buy = r.buy_rate ?? 0, sell = r.sell_rate ?? 0;
+    return ((buy + sell) / 2).toFixed(2);
+  };
+  const updated = rates[0]?.fetched_at ? new Date(rates[0].fetched_at).toLocaleDateString() : "—";
 
   return (
     <Layout>
