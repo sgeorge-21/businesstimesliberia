@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import Layout, { ShowSidebar } from "@/components/lbh/Layout";
 import { CardsGrid, ListCards } from "@/components/lbh/Cards";
 import { ECONOMY_CARDS, ECONOMY_LIST } from "@/components/lbh/data";
