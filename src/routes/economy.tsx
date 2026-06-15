@@ -50,9 +50,9 @@ function EconomyPage() {
         <div>
           {tab === TABS[0] && (
             <div className="stats-row">
-              <div className="stat-cell"><div className="stat-label">GDP Growth (2026)</div><div className="stat-value">4.8%</div><div className="stat-change up">▲ 0.3% vs last year</div></div>
-              <div className="stat-cell"><div className="stat-label">USD / LRD</div><div className="stat-value">191.4</div><div className="stat-change down">▼ 0.8 today</div></div>
-              <div className="stat-cell"><div className="stat-label">National Budget</div><div className="stat-value">$713M</div><div className="stat-change up">▲ 8% vs FY2025</div></div>
+              <div className="stat-cell"><div className="stat-label">USD / LRD (mid)</div><div className="stat-value">{fmt("USD")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
+              <div className="stat-cell"><div className="stat-label">EUR / LRD (mid)</div><div className="stat-value">{fmt("EUR")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
+              <div className="stat-cell"><div className="stat-label">GBP / LRD (mid)</div><div className="stat-value">{fmt("GBP")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
             </div>
           )}
           <div className="section-label-sm">{tab === TABS[0] ? "Economy Headlines" : tab}</div>
