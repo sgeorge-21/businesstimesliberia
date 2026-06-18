@@ -88,7 +88,7 @@ export function Footer() {
             <div className="social-row">
               <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook" className="social-icon"><Facebook size={16} /></a>
               <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube" className="social-icon"><Youtube size={16} /></a>
-              <a href="https://wa.me/231000000000" target="_blank" rel="noreferrer" aria-label="WhatsApp" className="social-icon"><MessageCircle size={16} /></a>
+              <a href="https://wa.me/231760005317" target="_blank" rel="noreferrer" aria-label="WhatsApp" className="social-icon"><MessageCircle size={16} /></a>
               <a href="https://x.com" target="_blank" rel="noreferrer" aria-label="X" className="social-icon">𝕏</a>
             </div>
           </div>
