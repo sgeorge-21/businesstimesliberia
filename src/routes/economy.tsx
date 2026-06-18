@@ -11,6 +11,7 @@ export const Route = createFileRoute("/economy")({ component: EconomyPage });
 const TABS = ["All Economy", "GDP & Growth", "Inflation", "Government Policy", "Agriculture", "Employment"];
 
 type Rate = { currency: string; buy_rate: number | null; sell_rate: number | null; fetched_at: string };
+type Indicator = { key: string; label: string; value: string; unit: string | null; source: string | null; as_of: string | null };
 
 function EconomyPage() {
   const [tab, setTab] = useState(TABS[0]);
