@@ -69,6 +69,20 @@ function EconomyPage() {
               <div className="stat-cell"><div className="stat-label">USD / LRD (mid)</div><div className="stat-value">{fmt("USD")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
               <div className="stat-cell"><div className="stat-label">EUR / LRD (mid)</div><div className="stat-value">{fmt("EUR")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
               <div className="stat-cell"><div className="stat-label">GBP / LRD (mid)</div><div className="stat-value">{fmt("GBP")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
+              {(() => { const i = ind("national_budget"); return (
+                <div className="stat-cell">
+                  <div className="stat-label">{i?.label ?? "National Budget"}</div>
+                  <div className="stat-value">{i ? `${i.value}${i.unit ? " " + i.unit : ""}` : "—"}</div>
+                  <div className="stat-change">Source: {i?.source ?? "—"}{i?.as_of ? ` · ${new Date(i.as_of).toLocaleDateString()}` : ""}</div>
+                </div>
+              ); })()}
+              {(() => { const i = ind("gdp"); return (
+                <div className="stat-cell">
+                  <div className="stat-label">{i?.label ?? "GDP"}</div>
+                  <div className="stat-value">{i ? `${i.value}${i.unit ? " " + i.unit : ""}` : "—"}</div>
+                  <div className="stat-change">Source: {i?.source ?? "—"}{i?.as_of ? ` · ${new Date(i.as_of).toLocaleDateString()}` : ""}</div>
+                </div>
+              ); })()}
             </div>
           )}
           <div className="section-label-sm">{tab === TABS[0] ? "Economy Headlines" : tab}</div>
