@@ -11,26 +11,36 @@ export const Route = createFileRoute("/economy")({ component: EconomyPage });
 const TABS = ["All Economy", "GDP & Growth", "Inflation", "Government Policy", "Agriculture", "Employment"];
 
 type Rate = { currency: string; buy_rate: number | null; sell_rate: number | null; fetched_at: string };
+type Indicator = { key: string; label: string; value: string; unit: string | null; source: string | null; as_of: string | null };
 
 function EconomyPage() {
   const [tab, setTab] = useState(TABS[0]);
   const [rates, setRates] = useState<Rate[]>([]);
+  const [indicators, setIndicators] = useState<Indicator[]>([]);
   const cards = filterByTab(ECONOMY_CARDS, tab, TABS[0]);
   const list = filterByTab(ECONOMY_LIST, tab, TABS[0]);
 
   useEffect(() => {
-    const load = () => supabase
+    const loadRates = () => supabase
       .from("cbl_rates")
       .select("currency,buy_rate,sell_rate,fetched_at")
       .order("currency")
       .then(({ data }) => setRates((data as Rate[]) || []));
-    load();
+    const loadIndicators = () => supabase
+      .from("economic_indicators")
+      .select("key,label,value,unit,source,as_of")
+      .then(({ data }) => setIndicators((data as Indicator[]) || []));
+    loadRates();
+    loadIndicators();
     const ch = supabase
-      .channel("economy_cbl_rates")
-      .on("postgres_changes", { event: "*", schema: "public", table: "cbl_rates" }, load)
+      .channel("economy_realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "cbl_rates" }, loadRates)
+      .on("postgres_changes", { event: "*", schema: "public", table: "economic_indicators" }, loadIndicators)
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, []);
+
+  const ind = (key: string) => indicators.find((i) => i.key === key);
 
   const fmt = (cur: string) => {
     const r = rates.find((x) => x.currency === cur);
@@ -59,6 +69,20 @@ function EconomyPage() {
               <div className="stat-cell"><div className="stat-label">USD / LRD (mid)</div><div className="stat-value">{fmt("USD")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
               <div className="stat-cell"><div className="stat-label">EUR / LRD (mid)</div><div className="stat-value">{fmt("EUR")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
               <div className="stat-cell"><div className="stat-label">GBP / LRD (mid)</div><div className="stat-value">{fmt("GBP")}</div><div className="stat-change">Source: CBL · {updated}</div></div>
+              {(() => { const i = ind("national_budget"); return (
+                <div className="stat-cell">
+                  <div className="stat-label">{i?.label ?? "National Budget"}</div>
+                  <div className="stat-value">{i ? `${i.value}${i.unit ? " " + i.unit : ""}` : "—"}</div>
+                  <div className="stat-change">Source: {i?.source ?? "—"}{i?.as_of ? ` · ${new Date(i.as_of).toLocaleDateString()}` : ""}</div>
+                </div>
+              ); })()}
+              {(() => { const i = ind("gdp"); return (
+                <div className="stat-cell">
+                  <div className="stat-label">{i?.label ?? "GDP"}</div>
+                  <div className="stat-value">{i ? `${i.value}${i.unit ? " " + i.unit : ""}` : "—"}</div>
+                  <div className="stat-change">Source: {i?.source ?? "—"}{i?.as_of ? ` · ${new Date(i.as_of).toLocaleDateString()}` : ""}</div>
+                </div>
+              ); })()}
             </div>
           )}
           <div className="section-label-sm">{tab === TABS[0] ? "Economy Headlines" : tab}</div>

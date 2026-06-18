@@ -86,6 +86,42 @@ export type Database = {
         }
         Relationships: []
       }
+      economic_indicators: {
+        Row: {
+          as_of: string | null
+          created_at: string
+          id: string
+          key: string
+          label: string
+          source: string | null
+          unit: string | null
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          as_of?: string | null
+          created_at?: string
+          id?: string
+          key: string
+          label: string
+          source?: string | null
+          unit?: string | null
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          as_of?: string | null
+          created_at?: string
+          id?: string
+          key?: string
+          label?: string
+          source?: string | null
+          unit?: string | null
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       podcasts: {
         Row: {
           air_date: string | null
