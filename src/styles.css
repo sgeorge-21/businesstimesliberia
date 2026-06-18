@@ -484,7 +484,7 @@ body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-li
 }
 
 /* CBL Rates ticker */
-.rates-ticker { background:#0b2545; color:#fff; overflow:hidden; display:flex; align-items:center; font-size:13px; border-bottom:1px solid #001f3f; }
+.rates-ticker { background:#0a6b3b; color:#fff; overflow:hidden; display:flex; align-items:center; font-size:13px; border-bottom:1px solid #064a28; position:sticky; top:0; z-index:100; }
 .rates-ticker-label { background:var(--gold,#c9a227); color:#0b2545; padding:6px 14px; font-weight:700; font-size:12px; letter-spacing:.4px; text-transform:uppercase; flex-shrink:0; }
 .rates-ticker-track { display:flex; gap:2.5rem; padding:6px 1rem; white-space:nowrap; animation:rates-scroll 35s linear infinite; }
 .rates-ticker-item { display:inline-flex; gap:6px; align-items:center; }
