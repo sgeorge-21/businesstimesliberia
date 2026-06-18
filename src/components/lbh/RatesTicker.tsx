@@ -26,13 +26,17 @@ export function RatesTicker() {
     <div className="rates-ticker" aria-label="CBL daily exchange rates">
       <span className="rates-ticker-label">CBL Rates (LRD)</span>
       <div className="rates-ticker-track">
-        {[...rates, ...rates].map((r, i) => (
-          <span key={i} className="rates-ticker-item">
-            <strong>{r.currency}</strong>
-            <span> Buy {r.buy_rate?.toFixed(2) ?? "—"}</span>
-            <span> · Sell {r.sell_rate?.toFixed(2) ?? "—"}</span>
-          </span>
-        ))}
+        {[...rates, ...rates].map((r, i) => {
+          const mid = r.buy_rate != null && r.sell_rate != null
+            ? ((r.buy_rate + r.sell_rate) / 2).toFixed(2)
+            : (r.buy_rate ?? r.sell_rate)?.toFixed(2) ?? "—";
+          return (
+            <span key={i} className="rates-ticker-item">
+              <strong>{r.currency}</strong>
+              <span> {mid}</span>
+            </span>
+          );
+        })}
       </div>
     </div>
   );
