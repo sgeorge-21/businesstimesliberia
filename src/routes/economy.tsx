@@ -19,11 +19,17 @@ function EconomyPage() {
   const list = filterByTab(ECONOMY_LIST, tab, TABS[0]);
 
   useEffect(() => {
-    supabase
+    const load = () => supabase
       .from("cbl_rates")
       .select("currency,buy_rate,sell_rate,fetched_at")
       .order("currency")
       .then(({ data }) => setRates((data as Rate[]) || []));
+    load();
+    const ch = supabase
+      .channel("economy_cbl_rates")
+      .on("postgres_changes", { event: "*", schema: "public", table: "cbl_rates" }, load)
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
   }, []);
 
   const fmt = (cur: string) => {
