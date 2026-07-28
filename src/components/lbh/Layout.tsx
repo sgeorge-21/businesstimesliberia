@@ -36,7 +36,6 @@ export function NavBar() {
             <div className="logo-text">
               <div className="small">THE LIBERIAN</div>
               <div className="big">Business Hour</div>
-              <div className="sub">with James T. Worquea III</div>
             </div>
           </Link>
           <ul className="nav-links">
@@ -135,7 +134,7 @@ export function ShowSidebar({ title = "Trending", items }: { title?: string; ite
       <div className="sidebar-box">
         <div className="sidebar-header">About The Show</div>
         <div className="sidebar-body">
-          <p>A weekly business radio program hosted by James T. Worquea III.</p>
+          <p>A weekly business radio program on business, economy and finance in Liberia.</p>
           <div className="show-detail">📅 <strong>Every Saturday</strong></div>
           <div className="show-detail">⏰ <strong>7:00 – 7:45 AM</strong></div>
           <div className="show-detail">🔁 <strong>Repeat: Sundays 5–5:45 PM</strong></div>
