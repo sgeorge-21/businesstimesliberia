@@ -5,6 +5,7 @@ export type Card = {
   img: string;
   excerpt: string;
   meta: string;
+  slug?: string;
 };
 export type ListItem = { title: string; cat: string; img: string; meta: string };
 

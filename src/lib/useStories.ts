@@ -14,7 +14,6 @@ export type StoryRow = {
   published_at: string | null;
   created_at: string | null;
   tags: string[] | null;
-  section: string | null;
 };
 
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80";
@@ -46,7 +45,7 @@ export function usePublishedStories(section?: string) {
         if (cancelled) return;
         const rows = ((data ?? []) as unknown as StoryRow[]).filter((s) => {
           if (!section) return true;
-          const hay = `${s.section ?? ""} ${s.category ?? ""} ${(s.tags ?? []).join(" ")}`.toLowerCase();
+          const hay = `${s.category ?? ""} ${(s.tags ?? []).join(" ")}`.toLowerCase();
           return hay.includes(section.toLowerCase());
         });
         setStories(rows);
@@ -62,6 +61,6 @@ export function matchesTab(s: StoryRow, tab: string) {
   const t = tab.toLowerCase().replace(/^all\s+/, "").trim();
   if (!t) return true;
   const words = t.split(/[&\s]+/).filter((w) => w.length > 2);
-  const hay = `${s.category ?? ""} ${(s.tags ?? []).join(" ")} ${s.section ?? ""}`.toLowerCase();
+  const hay = `${s.category ?? ""} ${(s.tags ?? []).join(" ")}`.toLowerCase();
   return words.some((w) => hay.includes(w));
 }
