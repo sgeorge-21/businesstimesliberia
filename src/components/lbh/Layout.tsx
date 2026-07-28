@@ -94,7 +94,8 @@ export function Footer() {
             <p>Informing Liberia's business community one story at a time. Every Saturday morning.</p>
             <div className="social-row">
               <a href="https://www.facebook.com/share/1CeGgCYxmQ/" target="_blank" rel="noreferrer" aria-label="Facebook" className="social-icon"><Facebook size={16} /></a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube" className="social-icon"><Youtube size={16} /></a>
+              <a href="https://www.youtube.com/@BusinessHour1" target="_blank" rel="noreferrer" aria-label="YouTube" className="social-icon"><Youtube size={16} /></a>
+              <a href="https://www.tiktok.com/@liberianbusinesshour?_r=1&_t=ZS-98P3pdOId0f" target="_blank" rel="noreferrer" aria-label="TikTok" className="social-icon"><TikTokIcon size={16} /></a>
               <a href="https://wa.me/231760005317" target="_blank" rel="noreferrer" aria-label="WhatsApp" className="social-icon"><MessageCircle size={16} /></a>
               <a href="https://x.com" target="_blank" rel="noreferrer" aria-label="X" className="social-icon">𝕏</a>
             </div>
