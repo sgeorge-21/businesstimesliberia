@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import Layout, { ShowSidebar } from "@/components/lbh/Layout";
-import { CardsGrid, ListCards } from "@/components/lbh/Cards";
-import { FINANCE_CARDS, FINANCE_LIST } from "@/components/lbh/data";
-import { filterByTab } from "@/lib/filterByTab";
+import { CardsGrid } from "@/components/lbh/Cards";
+import { usePublishedStories, matchesTab, toCard } from "@/lib/useStories";
 
 export const Route = createFileRoute("/finance")({ component: FinancePage });
 
@@ -11,8 +10,9 @@ const TABS = ["All Finance", "Banking", "Microfinance", "Insurance", "Taxation",
 
 function FinancePage() {
   const [tab, setTab] = useState(TABS[0]);
-  const cards = filterByTab(FINANCE_CARDS, tab, TABS[0]);
-  const list = filterByTab(FINANCE_LIST, tab, TABS[0]);
+  const { stories, loading } = usePublishedStories("financ");
+  const filtered = tab === TABS[0] ? stories : stories.filter((s) => matchesTab(s, tab));
+  const cards = filtered.map(toCard);
 
   return (
     <Layout>
@@ -29,13 +29,10 @@ function FinancePage() {
       <div className="main-layout">
         <div>
           <div className="section-label-sm">{tab === TABS[0] ? "Finance Headlines" : tab}</div>
-          {cards.length > 0 ? <CardsGrid items={cards} /> : <p style={{ color: "var(--text-light)" }}>No stories in this category yet.</p>}
-          {list.length > 0 && (
-            <>
-              <div className="section-label-sm">More Finance Stories</div>
-              <ListCards items={list} />
-            </>
-          )}
+          {loading && <p style={{ color: "var(--text-light)" }}>Loading stories…</p>}
+          {!loading && (cards.length > 0
+            ? <CardsGrid items={cards} />
+            : <p style={{ color: "var(--text-light)" }}>No stories published in this category yet.</p>)}
         </div>
         <ShowSidebar title="Finance Tools" items={[
           "Liberia Business Loan Calculator",

@@ -2,9 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Layout, { ShowSidebar } from "@/components/lbh/Layout";
-import { CardsGrid, ListCards } from "@/components/lbh/Cards";
-import { ECONOMY_CARDS, ECONOMY_LIST } from "@/components/lbh/data";
-import { filterByTab } from "@/lib/filterByTab";
+import { CardsGrid } from "@/components/lbh/Cards";
+import { usePublishedStories, matchesTab, toCard } from "@/lib/useStories";
 
 export const Route = createFileRoute("/economy")({ component: EconomyPage });
 
@@ -17,8 +16,9 @@ function EconomyPage() {
   const [tab, setTab] = useState(TABS[0]);
   const [rates, setRates] = useState<Rate[]>([]);
   const [indicators, setIndicators] = useState<Indicator[]>([]);
-  const cards = filterByTab(ECONOMY_CARDS, tab, TABS[0]);
-  const list = filterByTab(ECONOMY_LIST, tab, TABS[0]);
+  const { stories, loading } = usePublishedStories("econom");
+  const filteredStories = tab === TABS[0] ? stories : stories.filter((s) => matchesTab(s, tab));
+  const cards = filteredStories.map(toCard);
 
   useEffect(() => {
     const loadRates = () => supabase
@@ -86,13 +86,10 @@ function EconomyPage() {
             </div>
           )}
           <div className="section-label-sm">{tab === TABS[0] ? "Economy Headlines" : tab}</div>
-          {cards.length > 0 ? <CardsGrid items={cards} /> : <p style={{ color: "var(--text-light)" }}>No stories in this category yet.</p>}
-          {list.length > 0 && (
-            <>
-              <div className="section-label-sm">More Economy Stories</div>
-              <ListCards items={list} />
-            </>
-          )}
+          {loading && <p style={{ color: "var(--text-light)" }}>Loading stories…</p>}
+          {!loading && (cards.length > 0
+            ? <CardsGrid items={cards} />
+            : <p style={{ color: "var(--text-light)" }}>No stories published in this category yet.</p>)}
         </div>
         <ShowSidebar title="Economy Data" items={[
           "Liberia GDP: 2020–2026 Trend Report",
