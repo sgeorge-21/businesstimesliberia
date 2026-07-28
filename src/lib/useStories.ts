@@ -14,6 +14,7 @@ export type StoryRow = {
   published_at: string | null;
   created_at: string | null;
   tags: string[] | null;
+  featured: string | null;
 };
 
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80";

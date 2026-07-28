@@ -13,7 +13,9 @@ export function StoryCard({ c }: { c: Card }) {
         <p>{c.excerpt}</p>
         <div className="card-footer">
           <span className="card-meta">{c.meta}</span>
-          <Link to="/stories" className="read-link">Read →</Link>
+          {c.slug
+            ? <Link to="/stories/$slug" params={{ slug: c.slug }} className="read-link">Read →</Link>
+            : <Link to="/stories" className="read-link">Read →</Link>}
         </div>
       </div>
     </div>

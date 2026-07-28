@@ -25,7 +25,7 @@ function PodcastPage() {
         <div className="podcast-banner-info">
           <div className="label">Podcast & Radio Archive</div>
           <h1>The Liberian Business Hour</h1>
-          <p>Every Saturday from 7:00–7:45 AM. Hosted by James T. Worquea III, the show brings you Liberia's most important business, finance, and economic conversations.</p>
+          <p>Every Saturday from 7:00–7:45 AM. The show brings you Liberia's most important business, finance, and economic conversations.</p>
           <div className="podcast-meta-row">
             <span>Every Saturday 7–7:45 AM</span>
             <span>Repeat: Sundays 5–5:45 PM</span>
