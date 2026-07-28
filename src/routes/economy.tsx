@@ -91,12 +91,7 @@ function EconomyPage() {
             ? <CardsGrid items={cards} />
             : <p style={{ color: "var(--text-light)" }}>No stories published in this category yet.</p>)}
         </div>
-        <ShowSidebar title="Economy Data" items={[
-          "Liberia GDP: 2020–2026 Trend Report",
-          "2026 National Budget Breakdown",
-          "Inflation & Consumer Price Index Data",
-          "Liberia's Top Export Commodities 2026",
-        ]} />
+        <ShowSidebar title="Trending" items={[]} />
       </div>
     </Layout>
   );

@@ -62,12 +62,7 @@ function AboutPage() {
             <button className="btn-send" onClick={() => setSent(true)}>{sent ? "✓ Message sent" : "Send Message →"}</button>
           </div>
         </div>
-        <ShowSidebar title="Top Stories" items={[
-          "From Market Table to Million-Dollar Brand",
-          "The Hidden Cost of Doing Business in Liberia",
-          "Meet Liberia's Youngest Self-Made Millionaire",
-          "How Women Are Leading Liberia's Economic Recovery",
-        ]} />
+        <ShowSidebar title="Trending" items={[]} />
       </div>
     </Layout>
   );

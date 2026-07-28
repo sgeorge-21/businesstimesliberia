@@ -34,12 +34,7 @@ function BusinessPage() {
             ? <CardsGrid items={cards} />
             : <p style={{ color: "var(--text-light)" }}>No stories published in this category yet.</p>)}
         </div>
-        <ShowSidebar title="Trending" items={[
-          "How the Investment Act Changes Business Registration",
-          "Top 10 Liberian Businesses to Watch in 2026",
-          "SME Financing Options: A Complete 2026 Guide",
-          "Freeport Trade Zone: What It Means for You",
-        ]} />
+        <ShowSidebar title="Trending" items={[]} />
       </div>
     </Layout>
   );

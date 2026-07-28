@@ -34,12 +34,7 @@ function FinancePage() {
             ? <CardsGrid items={cards} />
             : <p style={{ color: "var(--text-light)" }}>No stories published in this category yet.</p>)}
         </div>
-        <ShowSidebar title="Finance Tools" items={[
-          "Liberia Business Loan Calculator",
-          "USD/LRD Exchange Rate Tracker",
-          "CBL Interest Rate History",
-          "Liberia Tax Filing Guide 2026",
-        ]} />
+        <ShowSidebar title="Trending" items={[]} />
       </div>
     </Layout>
   );
