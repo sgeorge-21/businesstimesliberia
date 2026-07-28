@@ -38,7 +38,7 @@ function PodcastPage() {
         <span>Listen on</span>
         <button className="platform-btn">🟢 Spotify</button>
         <button className="platform-btn">🍎 Apple Music</button>
-        <button className="platform-btn">▶ YouTube</button>
+        <a href="https://www.youtube.com/@BusinessHour1" target="_blank" rel="noreferrer" className="platform-btn">▶ YouTube</a>
         <button className="platform-btn">📻 Radio</button>
       </div>
       <div className="full-width">
