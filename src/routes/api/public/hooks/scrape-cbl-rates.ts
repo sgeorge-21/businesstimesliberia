@@ -1,77 +1,87 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Firecrawl from "@mendable/firecrawl-js";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-// Scrapes the CBL daily exchange rates page and upserts into cbl_rates.
-// Called by pg_cron daily; also safe to invoke manually from admin.
+// Scrapes the CBL "Daily Exchange Rates" table (USD/LRD) and derives EUR & GBP
+// from live USD cross rates. Called by pg_cron daily; safe to invoke manually.
 export const Route = createFileRoute("/api/public/hooks/scrape-cbl-rates")({
   server: {
     handlers: {
       POST: async () => {
-        const apiKey = process.env.FIRECRAWL_API_KEY;
-        if (!apiKey) {
-          return Response.json({ success: false, error: "FIRECRAWL_API_KEY missing" }, { status: 500 });
-        }
         try {
-          const fc = new Firecrawl({ apiKey });
-          // CBL publishes daily rates here. If page layout changes, this regex still picks up currency + numbers.
-          const res = await fc.scrape("https://www.cbl.org.lr/", {
-            formats: ["markdown"],
-            onlyMainContent: true,
-          });
-          const md: string =
-            (res as any).markdown ?? (res as any).data?.markdown ?? "";
+          const html = await fetch("https://www.cbl.org.lr/research/buying-selling-rates", {
+            headers: { "user-agent": "Mozilla/5.0 (compatible; LBH/1.0)" },
+          }).then((r) => r.text());
 
-          // Try to find a "Daily Exchange Rates" style table. Fallback regex per currency line.
-          const wanted = ["USD", "EUR", "GBP"];
-          const found: Record<string, { buy: number; sell: number }> = {};
-          for (const cur of wanted) {
-            // Match e.g. "USD  188.50  192.00" or "USD | 188.50 | 192.00"
-            const re = new RegExp(
-              `\\b${cur}\\b[^0-9\\n\\r]{0,40}([0-9]{2,4}(?:\\.[0-9]{1,4})?)[^0-9\\n\\r]{0,20}([0-9]{2,4}(?:\\.[0-9]{1,4})?)`,
-              "i",
+          const text = html
+            .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " ")
+            .replace(/<[^>]+>/g, " ")
+            .replace(/&[a-z]+;/gi, " ")
+            .replace(/\s+/g, " ");
+
+          // First row of the table is the most recent date.
+          const m = text.match(
+            /L\$\s*([0-9]+(?:\.[0-9]+)?)\s*\/\s*US\$\s*1\.00\s*L\$\s*([0-9]+(?:\.[0-9]+)?)\s*\/\s*US\$\s*1\.00/i,
+          );
+          if (!m) {
+            return Response.json(
+              { success: false, error: "Could not parse USD rate from CBL page" },
+              { status: 502 },
             );
-            const m = md.match(re);
-            if (m) {
-              const buy = parseFloat(m[1]);
-              const sell = parseFloat(m[2]);
-              if (!Number.isNaN(buy) && !Number.isNaN(sell)) {
-                found[cur] = { buy, sell };
+          }
+          const usdBuy = parseFloat(m[1]);
+          const usdSell = parseFloat(m[2]);
+
+          const rows: { currency: string; buy: number; sell: number; source: string }[] = [
+            { currency: "USD", buy: usdBuy, sell: usdSell, source: "cbl.org.lr" },
+          ];
+
+          try {
+            const fx = (await fetch(
+              "https://api.frankfurter.dev/v1/latest?base=USD&symbols=EUR,GBP",
+            ).then((r) => r.json())) as { rates?: Record<string, number> };
+            for (const cur of ["EUR", "GBP"] as const) {
+              const per = fx.rates?.[cur];
+              if (per && per > 0) {
+                rows.push({
+                  currency: cur,
+                  buy: Number((usdBuy / per).toFixed(4)),
+                  sell: Number((usdSell / per).toFixed(4)),
+                  source: "cbl.org.lr + ECB cross",
+                });
               }
             }
+          } catch {
+            // USD still updates even if cross rates are unavailable.
           }
 
-          const updates = Object.entries(found).map(([currency, v]) =>
-            supabaseAdmin
-              .from("cbl_rates")
-              .upsert(
+          const fetched_at = new Date().toISOString();
+          const results = await Promise.all(
+            rows.map((r) =>
+              supabaseAdmin.from("cbl_rates").upsert(
                 {
-                  currency,
-                  buy_rate: v.buy,
-                  sell_rate: v.sell,
-                  source: "cbl.org.lr",
-                  fetched_at: new Date().toISOString(),
+                  currency: r.currency,
+                  buy_rate: r.buy,
+                  sell_rate: r.sell,
+                  source: r.source,
+                  fetched_at,
                 },
                 { onConflict: "currency" },
               ),
+            ),
           );
-          const results = await Promise.all(updates);
           const errors = results.filter((r) => r.error).map((r) => r.error?.message);
 
           return Response.json({
             success: errors.length === 0,
-            updated: Object.keys(found),
-            found,
+            updated: rows.map((r) => r.currency),
+            rates: rows,
             errors: errors.length ? errors : undefined,
-            // Useful for debugging when regex misses; keep small.
-            preview: md.slice(0, 400),
           });
         } catch (e: any) {
           return Response.json({ success: false, error: e?.message || String(e) }, { status: 500 });
         }
       },
-      GET: async () =>
-        new Response("Use POST to trigger CBL rate scrape", { status: 405 }),
+      GET: async () => new Response("Use POST to trigger CBL rate scrape", { status: 405 }),
     },
   },
 });
