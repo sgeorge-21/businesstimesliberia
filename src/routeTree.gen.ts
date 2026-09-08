@@ -67,9 +67,9 @@ const StoriesIndexRoute = StoriesIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const StoriesSlugRoute = StoriesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => StoriesRoute,
+  id: '/stories/$slug',
+  path: '/stories/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicHooksScrapeCblRatesRoute =
   ApiPublicHooksScrapeCblRatesRouteImport.update({
@@ -169,6 +169,7 @@ export interface RootRouteChildren {
   EconomyRoute: typeof EconomyRoute
   FinanceRoute: typeof FinanceRoute
   PodcastRoute: typeof PodcastRoute
+  StoriesSlugRoute: typeof StoriesSlugRoute
   StoriesIndexRoute: typeof StoriesIndexRoute
   ApiPublicHooksScrapeCblRatesRoute: typeof ApiPublicHooksScrapeCblRatesRoute
 }
@@ -240,10 +241,10 @@ declare module '@tanstack/react-router' {
     }
     '/stories/$slug': {
       id: '/stories/$slug'
-      path: '/$slug'
+      path: '/stories/$slug'
       fullPath: '/stories/$slug'
       preLoaderRoute: typeof StoriesSlugRouteImport
-      parentRoute: typeof StoriesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/scrape-cbl-rates': {
       id: '/api/public/hooks/scrape-cbl-rates'
@@ -264,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   EconomyRoute: EconomyRoute,
   FinanceRoute: FinanceRoute,
   PodcastRoute: PodcastRoute,
+  StoriesSlugRoute: StoriesSlugRoute,
   StoriesIndexRoute: StoriesIndexRoute,
   ApiPublicHooksScrapeCblRatesRoute: ApiPublicHooksScrapeCblRatesRoute,
 }
