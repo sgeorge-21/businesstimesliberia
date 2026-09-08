@@ -42,12 +42,12 @@ function StoryPage() {
     let cancelled = false;
     (async () => {
       setLoading(true);
-      const { data } = await supabase
-        .from("stories")
-        .select("id,title,category,summary,body,author,read_minutes,cover_url,tags,published_at")
-        .eq("slug", slug)
-        .eq("status", "published")
-        .maybeSingle();
+      setMissing(false);
+      const cols = "id,title,category,summary,body,author,read_minutes,cover_url,tags,published_at";
+      const q = supabase.from("stories").select(cols).eq("status", "published");
+      const { data } = UUID_RE.test(slug)
+        ? await q.eq("id", slug).maybeSingle()
+        : await q.eq("slug", slug).maybeSingle();
       if (cancelled) return;
       if (!data) setMissing(true);
       else setStory(data as Story);
