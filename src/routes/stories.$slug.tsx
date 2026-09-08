@@ -3,7 +3,21 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/lbh/Layout";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/stories/$slug")({ component: StoryPage });
+export const Route = createFileRoute("/stories/$slug")({
+  component: StoryPage,
+  head: () => ({
+    meta: [
+      { title: "Story — The Liberian Business Hour" },
+      { name: "description", content: "Read the full story from The Liberian Business Hour news desk." },
+      { property: "og:title", content: "Story — The Liberian Business Hour" },
+      { property: "og:description", content: "Read the full story from The Liberian Business Hour news desk." },
+      { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+});
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 type Story = {
   id: string;
