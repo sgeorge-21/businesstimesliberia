@@ -248,6 +248,44 @@ export type Database = {
         }
         Relationships: []
       }
+      story_comments: {
+        Row: {
+          author_name: string
+          body: string
+          created_at: string
+          id: string
+          story_id: string
+          user_id: string | null
+          visible: boolean
+        }
+        Insert: {
+          author_name: string
+          body: string
+          created_at?: string
+          id?: string
+          story_id: string
+          user_id?: string | null
+          visible?: boolean
+        }
+        Update: {
+          author_name?: string
+          body?: string
+          created_at?: string
+          id?: string
+          story_id?: string
+          user_id?: string | null
+          visible?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "story_comments_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trending_items: {
         Row: {
           active: boolean
