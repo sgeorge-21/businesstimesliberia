@@ -77,11 +77,9 @@ function StoriesPage() {
                   By {s.author ?? "LBH Staff"}
                   {s.published_at && ` · ${new Date(s.published_at).toLocaleDateString()}`}
                 </p>
-                {s.slug && (
-                  <Link to="/stories/$slug" params={{ slug: s.slug }} className="btn-read-green" style={{ marginTop: ".75rem" }}>
-                    Read Full Story
-                  </Link>
-                )}
+                <Link to="/stories/$slug" params={{ slug: s.slug || s.id }} className="btn-read-green" style={{ marginTop: ".75rem" }}>
+                  Read Full Story
+                </Link>
               </div>
             </div>
           ))}

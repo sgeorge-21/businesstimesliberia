@@ -42,9 +42,7 @@ function Home() {
                 {new Date(hero.published_at || hero.created_at || Date.now()).toLocaleDateString()}
                 {hero.read_minutes ? ` · ${hero.read_minutes} min read` : ""}
               </span>
-              {hero.slug && (
-                <Link to="/stories/$slug" params={{ slug: hero.slug }} className="btn-read">Read Full Story →</Link>
-              )}
+              <Link to="/stories/$slug" params={{ slug: hero.slug || hero.id }} className="btn-read">Read Full Story →</Link>
             </div>
           </div>
         </div>

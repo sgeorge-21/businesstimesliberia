@@ -26,7 +26,7 @@ export function toCard(s: StoryRow): Card {
     img: s.cover_url || FALLBACK_IMG,
     excerpt: s.summary || "",
     meta: `${s.author || "LBH Staff"} · ${new Date(s.published_at || s.created_at || Date.now()).toLocaleDateString()}`,
-    slug: s.slug || undefined,
+    slug: s.slug || s.id,
   };
 }
 

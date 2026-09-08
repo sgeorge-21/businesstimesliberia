@@ -3,7 +3,21 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/lbh/Layout";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/stories/$slug")({ component: StoryPage });
+export const Route = createFileRoute("/stories/$slug")({
+  component: StoryPage,
+  head: () => ({
+    meta: [
+      { title: "Story — The Liberian Business Hour" },
+      { name: "description", content: "Read the full story from The Liberian Business Hour news desk." },
+      { property: "og:title", content: "Story — The Liberian Business Hour" },
+      { property: "og:description", content: "Read the full story from The Liberian Business Hour news desk." },
+      { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+});
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 type Story = {
   id: string;
@@ -28,12 +42,12 @@ function StoryPage() {
     let cancelled = false;
     (async () => {
       setLoading(true);
-      const { data } = await supabase
-        .from("stories")
-        .select("id,title,category,summary,body,author,read_minutes,cover_url,tags,published_at")
-        .eq("slug", slug)
-        .eq("status", "published")
-        .maybeSingle();
+      setMissing(false);
+      const cols = "id,title,category,summary,body,author,read_minutes,cover_url,tags,published_at";
+      const q = supabase.from("stories").select(cols).eq("status", "published");
+      const { data } = UUID_RE.test(slug)
+        ? await q.eq("id", slug).maybeSingle()
+        : await q.eq("slug", slug).maybeSingle();
       if (cancelled) return;
       if (!data) setMissing(true);
       else setStory(data as Story);
