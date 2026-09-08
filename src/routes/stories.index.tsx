@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Layout, { ShowSidebar } from "@/components/lbh/Layout";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/stories")({ component: StoriesPage });
+export const Route = createFileRoute("/stories/")({ component: StoriesPage });
 
 type StoryRow = {
   id: string;

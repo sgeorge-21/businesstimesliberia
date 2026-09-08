@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as PodcastRouteImport } from './routes/podcast'
 import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as EconomyRouteImport } from './routes/economy'
@@ -18,14 +17,10 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StoriesIndexRouteImport } from './routes/stories.index'
 import { Route as StoriesSlugRouteImport } from './routes/stories.$slug'
 import { Route as ApiPublicHooksScrapeCblRatesRouteImport } from './routes/api/public/hooks/scrape-cbl-rates'
 
-const StoriesRoute = StoriesRouteImport.update({
-  id: '/stories',
-  path: '/stories',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PodcastRoute = PodcastRouteImport.update({
   id: '/podcast',
   path: '/podcast',
@@ -66,6 +61,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StoriesIndexRoute = StoriesIndexRouteImport.update({
+  id: '/stories/',
+  path: '/stories/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StoriesSlugRoute = StoriesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -87,8 +87,8 @@ export interface FileRoutesByFullPath {
   '/economy': typeof EconomyRoute
   '/finance': typeof FinanceRoute
   '/podcast': typeof PodcastRoute
-  '/stories': typeof StoriesRouteWithChildren
   '/stories/$slug': typeof StoriesSlugRoute
+  '/stories/': typeof StoriesIndexRoute
   '/api/public/hooks/scrape-cbl-rates': typeof ApiPublicHooksScrapeCblRatesRoute
 }
 export interface FileRoutesByTo {
@@ -100,8 +100,8 @@ export interface FileRoutesByTo {
   '/economy': typeof EconomyRoute
   '/finance': typeof FinanceRoute
   '/podcast': typeof PodcastRoute
-  '/stories': typeof StoriesRouteWithChildren
   '/stories/$slug': typeof StoriesSlugRoute
+  '/stories': typeof StoriesIndexRoute
   '/api/public/hooks/scrape-cbl-rates': typeof ApiPublicHooksScrapeCblRatesRoute
 }
 export interface FileRoutesById {
@@ -114,8 +114,8 @@ export interface FileRoutesById {
   '/economy': typeof EconomyRoute
   '/finance': typeof FinanceRoute
   '/podcast': typeof PodcastRoute
-  '/stories': typeof StoriesRouteWithChildren
   '/stories/$slug': typeof StoriesSlugRoute
+  '/stories/': typeof StoriesIndexRoute
   '/api/public/hooks/scrape-cbl-rates': typeof ApiPublicHooksScrapeCblRatesRoute
 }
 export interface FileRouteTypes {
@@ -129,8 +129,8 @@ export interface FileRouteTypes {
     | '/economy'
     | '/finance'
     | '/podcast'
-    | '/stories'
     | '/stories/$slug'
+    | '/stories/'
     | '/api/public/hooks/scrape-cbl-rates'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -142,8 +142,8 @@ export interface FileRouteTypes {
     | '/economy'
     | '/finance'
     | '/podcast'
-    | '/stories'
     | '/stories/$slug'
+    | '/stories'
     | '/api/public/hooks/scrape-cbl-rates'
   id:
     | '__root__'
@@ -155,8 +155,8 @@ export interface FileRouteTypes {
     | '/economy'
     | '/finance'
     | '/podcast'
-    | '/stories'
     | '/stories/$slug'
+    | '/stories/'
     | '/api/public/hooks/scrape-cbl-rates'
   fileRoutesById: FileRoutesById
 }
@@ -169,19 +169,12 @@ export interface RootRouteChildren {
   EconomyRoute: typeof EconomyRoute
   FinanceRoute: typeof FinanceRoute
   PodcastRoute: typeof PodcastRoute
-  StoriesRoute: typeof StoriesRouteWithChildren
+  StoriesIndexRoute: typeof StoriesIndexRoute
   ApiPublicHooksScrapeCblRatesRoute: typeof ApiPublicHooksScrapeCblRatesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/stories': {
-      id: '/stories'
-      path: '/stories'
-      fullPath: '/stories'
-      preLoaderRoute: typeof StoriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/podcast': {
       id: '/podcast'
       path: '/podcast'
@@ -238,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stories/': {
+      id: '/stories/'
+      path: '/stories'
+      fullPath: '/stories/'
+      preLoaderRoute: typeof StoriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stories/$slug': {
       id: '/stories/$slug'
       path: '/$slug'
@@ -255,17 +255,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface StoriesRouteChildren {
-  StoriesSlugRoute: typeof StoriesSlugRoute
-}
-
-const StoriesRouteChildren: StoriesRouteChildren = {
-  StoriesSlugRoute: StoriesSlugRoute,
-}
-
-const StoriesRouteWithChildren =
-  StoriesRoute._addFileChildren(StoriesRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -275,7 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   EconomyRoute: EconomyRoute,
   FinanceRoute: FinanceRoute,
   PodcastRoute: PodcastRoute,
-  StoriesRoute: StoriesRouteWithChildren,
+  StoriesIndexRoute: StoriesIndexRoute,
   ApiPublicHooksScrapeCblRatesRoute: ApiPublicHooksScrapeCblRatesRoute,
 }
 export const routeTree = rootRouteImport
