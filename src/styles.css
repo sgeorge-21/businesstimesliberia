@@ -454,7 +454,9 @@ body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-li
   .lbh-app .footer-top { grid-template-columns:1fr; gap:1.5rem; }
   .lbh-app .section-banner, .lbh-app .section-tabs, .lbh-app .podcast-banner, .lbh-app .listen-platforms { padding-left:1rem; padding-right:1rem; }
   .lbh-app .section-banner h2 { font-size:1.75rem; }
-  .lbh-app .hero-overlay { padding:1.25rem; }
+  .lbh-app .hero { overflow:visible; }
+  .lbh-app .hero-img { height:240px; }
+  .lbh-app .hero-overlay { position:static; padding:1.25rem; background:var(--green-dark); }
   .lbh-app .stats-banner { grid-template-columns:1fr; }
   .lbh-app .values-grid { grid-template-columns:1fr; }
   .lbh-app .section-tabs { overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; }
