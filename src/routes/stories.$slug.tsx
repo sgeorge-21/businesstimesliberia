@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import Layout from "@/components/lbh/Layout";
+import Comments from "@/components/lbh/Comments";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/stories/$slug")({
@@ -96,6 +97,7 @@ function StoryPage() {
                 ))}
               </div>
             )}
+            <Comments storyId={story.id} />
           </>
         )}
       </article>
