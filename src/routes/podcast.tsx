@@ -4,7 +4,21 @@ import Layout from "@/components/lbh/Layout";
 import { EPISODES } from "@/components/lbh/data";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/podcast")({ component: PodcastPage });
+export const Route = createFileRoute("/podcast")({
+  component: PodcastPage,
+  head: () => ({
+    meta: [
+      { title: "Podcast — The Liberian Business Hour" },
+      { name: "description", content: "Listen to The Liberian Business Hour podcast and radio archive from Monrovia, Liberia." },
+      { property: "og:title", content: "Podcast — The Liberian Business Hour" },
+      { property: "og:description", content: "Listen to The Liberian Business Hour podcast and radio archive from Monrovia, Liberia." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://businesstimesliberia.lovable.app/podcast" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/podcast" }],
+  }),
+});
 
 function PodcastPage() {
   const [dbEps, setDbEps] = useState<any[]>([]);

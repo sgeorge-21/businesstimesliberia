@@ -3,7 +3,20 @@ import { useState } from "react";
 import Layout from "@/components/lbh/Layout";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/auth")({ component: AuthPage });
+export const Route = createFileRoute("/auth")({
+  component: AuthPage,
+  head: () => ({
+    meta: [
+      { title: "Administrator Sign In — The Liberian Business Hour" },
+      { name: "description", content: "Authorized administrator sign in for The Liberian Business Hour." },
+      { property: "og:title", content: "Administrator Sign In — The Liberian Business Hour" },
+      { property: "og:description", content: "Authorized administrator sign in for The Liberian Business Hour." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
+});
 
 function AuthPage() {
   const nav = useNavigate();

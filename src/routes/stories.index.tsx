@@ -3,7 +3,21 @@ import { useEffect, useState } from "react";
 import Layout, { ShowSidebar } from "@/components/lbh/Layout";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/stories/")({ component: StoriesPage });
+export const Route = createFileRoute("/stories/")({
+  component: StoriesPage,
+  head: () => ({
+    meta: [
+      { title: "Liberia Business Stories — The Liberian Business Hour" },
+      { name: "description", content: "Read in-depth Liberian business features, profiles, opinions and investigations." },
+      { property: "og:title", content: "Liberia Business Stories — The Liberian Business Hour" },
+      { property: "og:description", content: "Read in-depth Liberian business features, profiles, opinions and investigations." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://businesstimesliberia.lovable.app/stories" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/stories" }],
+  }),
+});
 
 type StoryRow = {
   id: string;

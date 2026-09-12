@@ -8,7 +8,20 @@ import { adminCreateUser, adminGrantRole, adminRevokeRole, ROLE_VALUES, type Rol
 import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import Layout from "@/components/lbh/Layout";
 
-export const Route = createFileRoute("/admin")({ component: AdminPage });
+export const Route = createFileRoute("/admin")({
+  component: AdminPage,
+  head: () => ({
+    meta: [
+      { title: "Admin Portal — The Liberian Business Hour" },
+      { name: "description", content: "Private content administration for The Liberian Business Hour." },
+      { property: "og:title", content: "Admin Portal — The Liberian Business Hour" },
+      { property: "og:description", content: "Private content administration for The Liberian Business Hour." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
+});
 
 type Tab = "dashboard" | "news" | "podcast" | "video" | "ads" | "trending" | "rates" | "users" | "manage";
 
@@ -183,6 +196,7 @@ function NewsForm({ onDone }: { onDone: () => void }) {
 
   async function publish(status: "published" | "draft") {
     if (!title || !summary) { alert("Title and summary required"); return; }
+    if (status === "published" && !cover) { alert("A cover image is required so the story displays a picture when shared."); return; }
     setBusy(true);
     const cover_url = cover ? await uploadFile(cover, "stories") : null;
     const { error } = await supabase.from("stories").insert({
@@ -216,11 +230,11 @@ function NewsForm({ onDone }: { onDone: () => void }) {
         </div>
         <div className="admin-form-group"><label>Summary / Excerpt *</label><textarea value={summary} onChange={(e) => setSummary(e.target.value)} placeholder="Short summary..." /></div>
         <div className="admin-form-group"><label>Full Article Body</label><textarea style={{ height: 200 }} value={body} onChange={(e) => setBody(e.target.value)} placeholder="Write the full article..." /></div>
-        <div className="admin-form-group"><label>Cover Image</label>
+        <div className="admin-form-group"><label>Cover Image {"*"}</label>
           <label className="file-upload-area" style={{ display: "block" }}>
             <div style={{ fontSize: "2rem", marginBottom: ".5rem" }}>📷</div>
             <p>{cover ? cover.name : "Click to upload cover image"}</p>
-            <small>JPG, PNG up to 5MB · Recommended: 1200×800px</small>
+            <small>Required to publish · JPG or PNG · Recommended: 1200×630px</small>
             <input type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => setCover(e.target.files?.[0] || null)} />
           </label>
         </div>
