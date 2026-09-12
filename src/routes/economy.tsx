@@ -5,7 +5,21 @@ import Layout, { ShowSidebar } from "@/components/lbh/Layout";
 import { CardsGrid } from "@/components/lbh/Cards";
 import { usePublishedStories, matchesTab, toCard } from "@/lib/useStories";
 
-export const Route = createFileRoute("/economy")({ component: EconomyPage });
+export const Route = createFileRoute("/economy")({
+  component: EconomyPage,
+  head: () => ({
+    meta: [
+      { title: "Liberia Economy News — The Liberian Business Hour" },
+      { name: "description", content: "Current Liberian economic news, CBL exchange rates, GDP, budget and policy coverage." },
+      { property: "og:title", content: "Liberia Economy News — The Liberian Business Hour" },
+      { property: "og:description", content: "Current Liberian economic news, CBL exchange rates, GDP, budget and policy coverage." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://businesstimesliberia.lovable.app/economy" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/economy" }],
+  }),
+});
 
 const TABS = ["All Economy", "GDP & Growth", "Inflation", "Government Policy", "Agriculture", "Employment"];
 

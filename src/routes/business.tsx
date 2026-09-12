@@ -4,7 +4,21 @@ import Layout, { ShowSidebar } from "@/components/lbh/Layout";
 import { CardsGrid } from "@/components/lbh/Cards";
 import { usePublishedStories, matchesTab, toCard } from "@/lib/useStories";
 
-export const Route = createFileRoute("/business")({ component: BusinessPage });
+export const Route = createFileRoute("/business")({
+  component: BusinessPage,
+  head: () => ({
+    meta: [
+      { title: "Liberia Business News — The Liberian Business Hour" },
+      { name: "description", content: "Latest business, trade, investment and entrepreneurship news from Liberia." },
+      { property: "og:title", content: "Liberia Business News — The Liberian Business Hour" },
+      { property: "og:description", content: "Latest business, trade, investment and entrepreneurship news from Liberia." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://businesstimesliberia.lovable.app/business" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/business" }],
+  }),
+});
 
 const TABS = ["All Business", "Trade & Commerce", "Market", "Investment", "Entrepreneurship", "Corporate News"];
 

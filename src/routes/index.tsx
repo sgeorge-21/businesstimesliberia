@@ -12,8 +12,10 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "The Liberian Business Hour" },
       { property: "og:description", content: "Liberia's weekly business radio program and news desk — business, economy, finance and CBL exchange rates." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://businesstimesliberia.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/" }],
   }),
 });
 

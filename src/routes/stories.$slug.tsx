@@ -1,21 +1,61 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import Layout from "@/components/lbh/Layout";
 import Comments from "@/components/lbh/Comments";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/stories/$slug")({
+  loader: async ({ params }) => {
+    const cols = "id,title,category,summary,body,author,read_minutes,cover_url,tags,published_at";
+    const query = supabase.from("stories").select(cols).eq("status", "published");
+    const { data } = UUID_RE.test(params.slug)
+      ? await query.eq("id", params.slug).maybeSingle()
+      : await query.eq("slug", params.slug).maybeSingle();
+    return { story: (data as Story | null) ?? null };
+  },
   component: StoryPage,
-  head: () => ({
-    meta: [
-      { title: "Story — The Liberian Business Hour" },
-      { name: "description", content: "Read the full story from The Liberian Business Hour news desk." },
-      { property: "og:title", content: "Story — The Liberian Business Hour" },
-      { property: "og:description", content: "Read the full story from The Liberian Business Hour news desk." },
-      { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: ({ params, loaderData }) => {
+    const story = loaderData?.story;
+    const title = story ? `${story.title} — The Liberian Business Hour` : "Story — The Liberian Business Hour";
+    const description = story?.summary || "Read the full story from The Liberian Business Hour news desk.";
+    const url = `https://businesstimesliberia.lovable.app/stories/${params.slug}`;
+    const imageMeta = story?.cover_url
+      ? [
+          { property: "og:image", content: story.cover_url },
+          { name: "twitter:image", content: story.cover_url },
+          { property: "og:image:alt", content: story.title },
+          { name: "twitter:image:alt", content: story.title },
+        ]
+      : [];
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: story?.title || title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { name: "twitter:title", content: story?.title || title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:card", content: "summary_large_image" },
+        ...imageMeta,
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: story ? [{
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "NewsArticle",
+          headline: story.title,
+          description,
+          image: story.cover_url ? [story.cover_url] : undefined,
+          datePublished: story.published_at || undefined,
+          author: { "@type": "Person", name: story.author || "LBH Staff" },
+          publisher: { "@type": "Organization", name: "The Liberian Business Hour" },
+          mainEntityOfPage: url,
+        }),
+      }] : [],
+    };
+  },
 });
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -34,35 +74,13 @@ type Story = {
 };
 
 function StoryPage() {
-  const { slug } = Route.useParams();
-  const [story, setStory] = useState<Story | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [missing, setMissing] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      setLoading(true);
-      setMissing(false);
-      const cols = "id,title,category,summary,body,author,read_minutes,cover_url,tags,published_at";
-      const q = supabase.from("stories").select(cols).eq("status", "published");
-      const { data } = UUID_RE.test(slug)
-        ? await q.eq("id", slug).maybeSingle()
-        : await q.eq("slug", slug).maybeSingle();
-      if (cancelled) return;
-      if (!data) setMissing(true);
-      else setStory(data as Story);
-      setLoading(false);
-    })();
-    return () => { cancelled = true; };
-  }, [slug]);
+  const { story } = Route.useLoaderData();
 
   return (
     <Layout>
       <article className="full-width" style={{ maxWidth: 820, padding: "2.5rem 1.25rem" }}>
         <Link to="/stories" style={{ color: "var(--green-mid)", fontSize: 13, textDecoration: "none" }}>← All stories</Link>
-        {loading && <p style={{ marginTop: "2rem" }}>Loading…</p>}
-        {missing && (
+        {!story && (
           <div style={{ marginTop: "2rem" }}>
             <h1 style={{ fontFamily: "'Playfair Display',serif" }}>Story not found</h1>
             <p>The story you're looking for may have been moved or unpublished.</p>

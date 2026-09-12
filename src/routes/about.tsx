@@ -2,7 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import Layout, { ShowSidebar } from "@/components/lbh/Layout";
 
-export const Route = createFileRoute("/about")({ component: AboutPage });
+export const Route = createFileRoute("/about")({
+  component: AboutPage,
+  head: () => ({
+    meta: [
+      { title: "About — The Liberian Business Hour" },
+      { name: "description", content: "Meet The Liberian Business Hour, its mission, vision and host James T. Worquea III." },
+      { property: "og:title", content: "About — The Liberian Business Hour" },
+      { property: "og:description", content: "Meet The Liberian Business Hour, its mission, vision and host James T. Worquea III." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://businesstimesliberia.lovable.app/about" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/about" }],
+  }),
+});
 
 function AboutPage() {
   const [sent, setSent] = useState(false);
