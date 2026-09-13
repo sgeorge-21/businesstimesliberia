@@ -166,11 +166,6 @@ body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-li
 .lbh-app nav.lbh-nav { background:#fff; border-bottom:1px solid var(--lbh-border); position:sticky; top:0; z-index:1000; padding:0 2rem; }
 .lbh-nav .nav-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px; }
 .lbh-nav .logo-block { display:flex; align-items:center; gap:10px; cursor:pointer; text-decoration:none; }
-.lbh-nav .logo-bar { width:4px; height:40px; background:var(--green-dark); }
-.lbh-nav .logo-text { line-height:1.1; }
-.lbh-nav .logo-text .small { font-size:10px; font-weight:500; color:var(--text-light); letter-spacing:1.5px; text-transform:uppercase; }
-.lbh-nav .logo-text .big { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:var(--green-dark); }
-.lbh-nav .logo-text .sub { font-size:10px; color:var(--text-light); }
 .lbh-nav .logo-img { height:48px; width:auto; object-fit:contain; display:block; }
 .lbh-nav .nav-links { display:flex; gap:2rem; list-style:none; padding:0; margin:0; }
 .lbh-nav .nav-links li a {
