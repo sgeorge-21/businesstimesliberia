@@ -2,6 +2,8 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { Menu, Facebook, Youtube, MessageCircle } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
+import logoAsset from "@/assets/lbh-logo.jpg.asset.json";
+
 function TikTokIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -40,11 +42,7 @@ export function NavBar() {
       <nav className="lbh-nav">
         <div className="nav-inner">
           <Link to="/" className="logo-block">
-            <div className="logo-bar" />
-            <div className="logo-text">
-              <div className="small">THE LIBERIAN</div>
-              <div className="big">Business Hour</div>
-            </div>
+            <img src={logoAsset.url} alt="The Liberian Business Hour" className="logo-img" />
           </Link>
           <ul className="nav-links">
             {NAV.map((n) => {
