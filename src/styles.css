@@ -166,7 +166,11 @@ body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-li
 .lbh-app nav.lbh-nav { background:#fff; border-bottom:1px solid var(--lbh-border); position:sticky; top:0; z-index:1000; padding:0 2rem; }
 .lbh-nav .nav-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px; }
 .lbh-nav .logo-block { display:flex; align-items:center; gap:10px; cursor:pointer; text-decoration:none; }
-.lbh-nav .logo-img { height:48px; width:auto; object-fit:contain; display:block; }
+.lbh-nav .logo-icon { height:44px; width:auto; object-fit:contain; display:block; }
+.lbh-nav .logo-line { width:6px; height:44px; background:var(--green-dark); display:block; border-radius:1px; }
+.lbh-nav .logo-text { display:flex; flex-direction:column; line-height:1.1; }
+.lbh-nav .logo-the { font-size:11.5px; letter-spacing:2.5px; color:var(--text-light); font-weight:500; }
+.lbh-nav .logo-business { font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:700; color:var(--green-dark); }
 .lbh-nav .nav-links { display:flex; gap:2rem; list-style:none; padding:0; margin:0; }
 .lbh-nav .nav-links li a {
   text-decoration:none; font-size:13.5px; font-weight:500; color:var(--text-mid);
