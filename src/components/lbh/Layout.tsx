@@ -42,11 +42,7 @@ export function NavBar() {
       <nav className="lbh-nav">
         <div className="nav-inner">
           <Link to="/" className="logo-block">
-            <div className="logo-bar" />
-            <div className="logo-text">
-              <div className="small">THE LIBERIAN</div>
-              <div className="big">Business Hour</div>
-            </div>
+            <img src={logoAsset.url} alt="The Liberian Business Hour" className="logo-img" />
           </Link>
           <ul className="nav-links">
             {NAV.map((n) => {
