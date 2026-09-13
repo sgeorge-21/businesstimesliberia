@@ -2,6 +2,8 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { Menu, Facebook, Youtube, MessageCircle } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
+import logoAsset from "@/assets/lbh-logo.jpg.asset.json";
+
 function TikTokIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
