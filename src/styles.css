@@ -465,7 +465,10 @@ body.lbh, .lbh-app { font-family:'DM Sans',sans-serif; background:var(--cream-li
 
 @media(max-width:480px) {
   .lbh-app .stats-grid { grid-template-columns:1fr; }
-  .lbh-nav .logo-img { height:40px; }
+  .lbh-nav .logo-icon { height:36px; }
+  .lbh-nav .logo-line { height:36px; width:5px; }
+  .lbh-nav .logo-the { font-size:10px; letter-spacing:1.5px; }
+  .lbh-nav .logo-business { font-size:1.25rem; }
   .lbh-app .hero h1 { font-size:1.5rem; }
 }
 
