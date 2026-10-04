@@ -205,6 +205,7 @@ export type Database = {
           read_minutes: number | null
           slug: string | null
           status: string
+          story_images: Json
           summary: string | null
           tags: string[] | null
           title: string
@@ -223,6 +224,7 @@ export type Database = {
           read_minutes?: number | null
           slug?: string | null
           status?: string
+          story_images?: Json
           summary?: string | null
           tags?: string[] | null
           title: string
@@ -241,6 +243,7 @@ export type Database = {
           read_minutes?: number | null
           slug?: string | null
           status?: string
+          story_images?: Json
           summary?: string | null
           tags?: string[] | null
           title?: string

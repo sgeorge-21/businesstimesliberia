@@ -1,0 +1,1 @@
+ALTER TABLE public.stories ADD COLUMN IF NOT EXISTS story_images jsonb NOT NULL DEFAULT '[]'::jsonb;
