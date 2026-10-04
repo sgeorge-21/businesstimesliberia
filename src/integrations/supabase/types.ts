@@ -196,6 +196,7 @@ export type Database = {
           author: string | null
           body: string | null
           category: string
+          cover_caption: string | null
           cover_url: string | null
           created_at: string
           created_by: string | null
@@ -215,6 +216,7 @@ export type Database = {
           author?: string | null
           body?: string | null
           category: string
+          cover_caption?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
@@ -234,6 +236,7 @@ export type Database = {
           author?: string | null
           body?: string | null
           category?: string
+          cover_caption?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
