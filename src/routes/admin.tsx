@@ -1,6 +1,9 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
+import ArticleEditor from "@/components/lbh/ArticleEditor";
+import type { StoryImage } from "@/lib/article-content";
+import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -113,7 +116,7 @@ function AdminPage() {
         </div>
         <div className="admin-body">
           {tab === "dashboard" && <Dashboard />}
-          {tab === "news" && <NewsForm onDone={() => showToast("Story published!")} />}
+          {tab === "news" && <NewsForm onDone={(message) => showToast(message)} />}
           {tab === "podcast" && <PodcastForm onDone={() => showToast("Episode published!")} />}
           {tab === "video" && <VideoForm onDone={() => showToast("Video published!")} />}
           {tab === "ads" && <AdsPanel onToast={showToast} />}
@@ -182,7 +185,7 @@ async function uploadFile(file: File, folder: string): Promise<string | null> {
   return supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
 }
 
-function NewsForm({ onDone }: { onDone: () => void }) {
+function NewsForm({ onDone, editId, onCancel }: { onDone: (message: string) => void; editId?: string; onCancel?: () => void }) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Business");
   const [author, setAuthor] = useState("");
@@ -192,29 +195,54 @@ function NewsForm({ onDone }: { onDone: () => void }) {
   const [tags, setTags] = useState("");
   const [featured, setFeatured] = useState("no");
   const [cover, setCover] = useState<File | null>(null);
+  const [existingCover, setExistingCover] = useState<string | null>(null);
+  const [coverCaption, setCoverCaption] = useState("");
+  const [extraImages, setExtraImages] = useState<{ file: File | null; url: string; caption: string }[]>([]);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!editId) return;
+    let active = true;
+    supabase.from("stories").select("title,category,author,read_minutes,summary,body,tags,featured,cover_url,cover_caption,story_images").eq("id", editId).maybeSingle().then(({ data }) => {
+      if (!active || !data) return;
+      setTitle(data.title); setCategory(data.category); setAuthor(data.author || ""); setReadMin(data.read_minutes || "");
+      setSummary(data.summary || ""); setBody(data.body || ""); setTags((data.tags || []).join(", "));
+      setFeatured(data.featured || "no"); setExistingCover(data.cover_url); setCoverCaption(data.cover_caption || "");
+      setExtraImages((Array.isArray(data.story_images) ? data.story_images : []).filter((image): image is { url: string; caption: string } => typeof image === "object" && image !== null && "url" in image && typeof image.url === "string" && "caption" in image && typeof image.caption === "string").slice(0, 3).map((image) => ({ ...image, file: null })));
+    });
+    return () => { active = false; };
+  }, [editId]);
 
   async function publish(status: "published" | "draft") {
     if (!title || !summary) { alert("Title and summary required"); return; }
-    if (status === "published" && !cover) { alert("A cover image is required so the story displays a picture when shared."); return; }
+    if (status === "published" && !cover && !existingCover) { alert("A cover image is required so the story displays a picture when shared."); return; }
     setBusy(true);
-    const cover_url = cover ? await uploadFile(cover, "stories") : null;
-    const { error } = await supabase.from("stories").insert({
+    const cover_url = cover ? await uploadFile(cover, "stories") : existingCover;
+    if (cover && !cover_url) { setBusy(false); return; }
+    const story_images: StoryImage[] = [];
+    for (const image of extraImages) {
+      const url = image.file ? await uploadFile(image.file, "stories") : image.url;
+      if (!url) { setBusy(false); return; }
+      story_images.push({ url, caption: image.caption.trim() });
+    }
+    const payload = {
       title, category, author, read_minutes: readMin || null, summary, body,
       tags: tags ? tags.split(",").map((s) => s.trim()) : null,
-      featured, cover_url,
-      slug: title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 60),
+      featured, cover_url, cover_caption: coverCaption.trim(), story_images,
       status, published_at: status === "published" ? new Date().toISOString() : null,
-    });
+    };
+    const { error } = editId
+      ? await supabase.from("stories").update(payload).eq("id", editId)
+      : await supabase.from("stories").insert({ ...payload, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 60) });
     setBusy(false);
     if (error) return alert(error.message);
-    setTitle(""); setSummary(""); setBody(""); setAuthor(""); setReadMin(""); setTags(""); setCover(null);
-    onDone();
+    setTitle(""); setSummary(""); setBody(""); setAuthor(""); setReadMin(""); setTags(""); setCover(null); setExistingCover(null); setCoverCaption(""); setExtraImages([]);
+    onDone(editId ? "Story updated!" : status === "draft" ? "Draft saved!" : "Story published!");
   }
 
   return (
     <div className="admin-card">
-      <div className="admin-card-header">Publish News Article or Story</div>
+      <div className="admin-card-header">{editId ? "Edit Story" : "Publish News Article or Story"}</div>
       <div className="admin-card-body">
         <div className="admin-form-row">
           <div className="admin-form-group"><label>Article Title *</label><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Enter headline..." /></div>
@@ -229,14 +257,25 @@ function NewsForm({ onDone }: { onDone: () => void }) {
           <div className="admin-form-group"><label>Read Time (minutes)</label><input type="number" min={1} value={readMin} onChange={(e) => setReadMin(e.target.value ? +e.target.value : "")} placeholder="5" /></div>
         </div>
         <div className="admin-form-group"><label>Summary / Excerpt *</label><textarea value={summary} onChange={(e) => setSummary(e.target.value)} placeholder="Short summary..." /></div>
-        <div className="admin-form-group"><label>Full Article Body</label><textarea style={{ height: 200 }} value={body} onChange={(e) => setBody(e.target.value)} placeholder="Write the full article..." /></div>
+        <div className="admin-form-group"><label>Full Article Body</label><ArticleEditor key={editId || "new"} value={body} onChange={setBody} /></div>
         <div className="admin-form-group"><label>Cover Image {"*"}</label>
           <label className="file-upload-area" style={{ display: "block" }}>
             <div style={{ fontSize: "2rem", marginBottom: ".5rem" }}>📷</div>
-            <p>{cover ? cover.name : "Click to upload cover image"}</p>
+            <p>{cover ? cover.name : existingCover ? "Current cover image (click to replace)" : "Click to upload cover image"}</p>
             <small>Required to publish · JPG or PNG · Recommended: 1200×630px</small>
             <input type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => setCover(e.target.files?.[0] || null)} />
           </label>
+        </div>
+        {(cover || existingCover) && <div className="admin-form-group"><label>Cover image caption (optional)</label><input value={coverCaption} onChange={(e) => setCoverCaption(e.target.value)} placeholder="Credit or description" /></div>}
+        <div className="admin-form-group">
+          <label>Additional story pictures ({extraImages.length}/3)</label>
+          {extraImages.map((image, index) => <div className="story-image-input" key={index}>
+            {image.url && <img src={image.url} alt="Existing story picture" />}
+            <input type="file" accept="image/*" aria-label={`Picture ${index + 1}`} onChange={(e) => setExtraImages((current) => current.map((item, i) => i === index ? { ...item, file: e.target.files?.[0] || null } : item))} />
+            <input value={image.caption} aria-label={`Caption for picture ${index + 1}`} onChange={(e) => setExtraImages((current) => current.map((item, i) => i === index ? { ...item, caption: e.target.value } : item))} placeholder="Caption or photo credit (optional)" />
+            <Button type="button" variant="outline" onClick={() => setExtraImages((current) => current.filter((_, i) => i !== index))}>Remove picture</Button>
+          </div>)}
+          {extraImages.length < 3 && <Button type="button" variant="outline" onClick={() => setExtraImages((current) => [...current, { file: null, url: "", caption: "" }])}>Add picture</Button>}
         </div>
         <div className="admin-form-row">
           <div className="admin-form-group"><label>Tags (comma-separated)</label><input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="e.g. CBL, banking" /></div>
@@ -249,6 +288,7 @@ function NewsForm({ onDone }: { onDone: () => void }) {
           </div>
         </div>
         <div className="admin-btn-row">
+          {onCancel && <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>}
           <button className="btn-save-draft" disabled={busy} onClick={() => publish("draft")}>Save as Draft</button>
           <button className="btn-publish" disabled={busy} onClick={() => publish("published")}>{busy ? "..." : "Publish Now →"}</button>
         </div>
