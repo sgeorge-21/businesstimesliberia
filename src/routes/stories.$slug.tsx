@@ -2,10 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import Layout from "@/components/lbh/Layout";
 import Comments from "@/components/lbh/Comments";
 import { supabase } from "@/integrations/supabase/client";
+import { parseStoryImages, safeArticleHtml } from "@/lib/article-content";
 
 export const Route = createFileRoute("/stories/$slug")({
   loader: async ({ params }) => {
-    const cols = "id,title,category,summary,body,author,read_minutes,cover_url,tags,published_at";
+    const cols = "id,title,category,summary,body,author,read_minutes,cover_url,cover_caption,story_images,tags,published_at";
     const query = supabase.from("stories").select(cols).eq("status", "published");
     const { data } = UUID_RE.test(params.slug)
       ? await query.eq("id", params.slug).maybeSingle()
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/stories/$slug")({
     const title = story ? `${story.title} — The Liberian Business Hour` : "Story — The Liberian Business Hour";
     const description = story?.summary || "Read the full story from The Liberian Business Hour news desk.";
     const url = `https://businesstimesliberia.lovable.app/stories/${params.slug}`;
-    const imageMeta = story?.cover_url
+    const imageMeta = story?.cover_url && story.cover_url.startsWith("https://")
       ? [
           { property: "og:image", content: story.cover_url },
           { name: "twitter:image", content: story.cover_url },
@@ -69,6 +70,8 @@ type Story = {
   author: string | null;
   read_minutes: number | null;
   cover_url: string | null;
+  cover_caption: string | null;
+  story_images: unknown;
   tags: string[] | null;
   published_at: string | null;
 };
@@ -102,12 +105,17 @@ function StoryPage() {
               By {story.author ?? "LBH Staff"}
               {story.published_at && ` · ${new Date(story.published_at).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}`}
             </p>
-            {story.cover_url && (
-              <img src={story.cover_url} alt={story.title} style={{ width: "100%", borderRadius: 6, marginBottom: "2rem" }} loading="lazy" />
-            )}
-            <div style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "var(--text-dark)", whiteSpace: "pre-wrap" }}>
-              {story.body}
-            </div>
+            {story.cover_url && <figure className="article-figure">
+              <img src={story.cover_url} alt={story.cover_caption || story.title} loading="lazy" />
+              {story.cover_caption && <figcaption>{story.cover_caption}</figcaption>}
+            </figure>}
+            {story.body && (story.body.trim().startsWith("<")
+              ? <div className="article-body" dangerouslySetInnerHTML={{ __html: safeArticleHtml(story.body) }} />
+              : <div className="article-body article-plain">{story.body}</div>)}
+            {parseStoryImages(story.story_images).map((image, index) => <figure className="article-figure" key={`${image.url}-${index}`}>
+              <img src={image.url} alt={image.caption || `${story.title} — photo ${index + 2}`} loading="lazy" />
+              {image.caption && <figcaption>{image.caption}</figcaption>}
+            </figure>)}
             {story.tags && story.tags.length > 0 && (
               <div style={{ marginTop: "2.5rem", display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
                 {story.tags.map((t) => (

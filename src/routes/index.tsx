@@ -23,7 +23,9 @@ function Home() {
   const { stories, loading } = usePublishedStories();
 
   const hero = stories.find((s) => s.featured?.startsWith("Yes – Homepage")) ?? stories[0] ?? null;
-  const cards = stories.filter((s) => s.id !== hero?.id).slice(0, 4).map(toCard);
+  const remaining = stories.filter((s) => s.id !== hero?.id);
+  const cards = remaining.slice(0, 4).map(toCard);
+  const moreStories = remaining.slice(4).map(toCard);
 
   return (
     <Layout>
@@ -63,6 +65,12 @@ function Home() {
           {!loading && (cards.length > 0
             ? <CardsGrid items={cards} />
             : <p style={{ color: "var(--text-light)" }}>No stories published yet.</p>)}
+
+          {moreStories.length > 0 && <section className="more-stories" aria-label="More stories">
+            <div className="section-label-sm">More Stories</div>
+            <CardsGrid items={moreStories} />
+          </section>}
+          {stories.length > 0 && <Link to="/stories" className="read-link">Browse all stories →</Link>}
 
           <div className="mv-section">
             <div className="section-label-sm">Mission &amp; Vision</div>

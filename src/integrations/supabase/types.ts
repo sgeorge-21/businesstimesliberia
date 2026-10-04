@@ -196,6 +196,7 @@ export type Database = {
           author: string | null
           body: string | null
           category: string
+          cover_caption: string | null
           cover_url: string | null
           created_at: string
           created_by: string | null
@@ -205,6 +206,7 @@ export type Database = {
           read_minutes: number | null
           slug: string | null
           status: string
+          story_images: Json
           summary: string | null
           tags: string[] | null
           title: string
@@ -214,6 +216,7 @@ export type Database = {
           author?: string | null
           body?: string | null
           category: string
+          cover_caption?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
@@ -223,6 +226,7 @@ export type Database = {
           read_minutes?: number | null
           slug?: string | null
           status?: string
+          story_images?: Json
           summary?: string | null
           tags?: string[] | null
           title: string
@@ -232,6 +236,7 @@ export type Database = {
           author?: string | null
           body?: string | null
           category?: string
+          cover_caption?: string | null
           cover_url?: string | null
           created_at?: string
           created_by?: string | null
@@ -241,6 +246,7 @@ export type Database = {
           read_minutes?: number | null
           slug?: string | null
           status?: string
+          story_images?: Json
           summary?: string | null
           tags?: string[] | null
           title?: string
