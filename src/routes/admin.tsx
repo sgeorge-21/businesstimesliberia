@@ -198,16 +198,18 @@ function NewsForm({ onDone, editId, onCancel }: { onDone: (message: string) => v
   const [existingCover, setExistingCover] = useState<string | null>(null);
   const [coverCaption, setCoverCaption] = useState("");
   const [extraImages, setExtraImages] = useState<{ file: File | null; url: string; caption: string }[]>([]);
+  const [originalPublishedAt, setOriginalPublishedAt] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (!editId) return;
     let active = true;
-    supabase.from("stories").select("title,category,author,read_minutes,summary,body,tags,featured,cover_url,cover_caption,story_images").eq("id", editId).maybeSingle().then(({ data }) => {
+    supabase.from("stories").select("title,category,author,read_minutes,summary,body,tags,featured,cover_url,cover_caption,story_images,published_at").eq("id", editId).maybeSingle().then(({ data }) => {
       if (!active || !data) return;
       setTitle(data.title); setCategory(data.category); setAuthor(data.author || ""); setReadMin(data.read_minutes || "");
       setSummary(data.summary || ""); setBody(data.body || ""); setTags((data.tags || []).join(", "));
       setFeatured(data.featured || "no"); setExistingCover(data.cover_url); setCoverCaption(data.cover_caption || "");
+      setOriginalPublishedAt(data.published_at);
       setExtraImages((Array.isArray(data.story_images) ? data.story_images : []).filter((image): image is { url: string; caption: string } => typeof image === "object" && image !== null && "url" in image && typeof image.url === "string" && "caption" in image && typeof image.caption === "string").slice(0, 3).map((image) => ({ ...image, file: null })));
     });
     return () => { active = false; };
@@ -216,6 +218,7 @@ function NewsForm({ onDone, editId, onCancel }: { onDone: (message: string) => v
   async function publish(status: "published" | "draft") {
     if (!title || !summary) { alert("Title and summary required"); return; }
     if (status === "published" && !cover && !existingCover) { alert("A cover image is required so the story displays a picture when shared."); return; }
+    if (extraImages.some((image) => !image.file && !image.url)) { alert("Choose a file for each added picture, or remove its empty slot."); return; }
     setBusy(true);
     const cover_url = cover ? await uploadFile(cover, "stories") : existingCover;
     if (cover && !cover_url) { setBusy(false); return; }
@@ -229,7 +232,7 @@ function NewsForm({ onDone, editId, onCancel }: { onDone: (message: string) => v
       title, category, author, read_minutes: readMin || null, summary, body,
       tags: tags ? tags.split(",").map((s) => s.trim()) : null,
       featured, cover_url, cover_caption: coverCaption.trim(), story_images,
-      status, published_at: status === "published" ? new Date().toISOString() : null,
+      status, published_at: status === "published" ? originalPublishedAt || new Date().toISOString() : null,
     };
     const { error } = editId
       ? await supabase.from("stories").update(payload).eq("id", editId)
