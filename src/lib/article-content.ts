@@ -16,7 +16,7 @@ export function safeArticleHtml(body: string) {
     transformTags: {
       span: (_tag, attrs) => {
         const size = attrs.style?.match(/(?:^|;)\s*font-size:\s*(14|18|22)px\s*(?:;|$)/i)?.[1];
-        return { tagName: "span", attribs: size ? { style: `font-size: ${size}px` } : {} };
+        return { tagName: "span", attribs: size ? { style: `font-size: ${size}px` } : ({} as Record<string, string>) };
       },
     },
   });
