@@ -593,6 +593,7 @@ function CreateUserForm({ onCreated }: { onCreated: () => void }) {
 
 function ManagePanel() {
   const [items, setItems] = useState<any[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
   async function load() {
     const [s, p, v] = await Promise.all([
       supabase.from("stories").select("id,title,category,status,created_at").order("created_at", { ascending: false }),
@@ -620,6 +621,7 @@ function ManagePanel() {
   }
 
   return (
+    editingId ? <NewsForm key={editingId} editId={editingId} onCancel={() => setEditingId(null)} onDone={() => { setEditingId(null); load(); }} /> :
     <div className="admin-card">
       <div className="admin-card-header">All Content <span className="badge">{items.length}</span></div>
       <div className="admin-card-body" style={{ padding: 0 }}>
@@ -636,6 +638,7 @@ function ManagePanel() {
                 <td><span className={`status-badge status-${r.status}`}>{r.status}</span></td>
                 <td>
                   <div className="action-btns">
+                    {r.table === "stories" && <Button type="button" size="sm" variant="outline" onClick={() => setEditingId(r.id)}>Edit</Button>}
                     <button className="btn-edit" onClick={() => toggleStatus(r.table, r.id, r.status)}>{r.status === "published" ? "Unpublish" : "Publish"}</button>
                     <button className="btn-delete" onClick={() => del(r.table, r.id)}>Delete</button>
                   </div>

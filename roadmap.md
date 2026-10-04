@@ -1,0 +1,3 @@
+- [x] Let administrators edit story typography and highlight text.
+- [x] Let administrators add up to three extra pictures and optional captions.
+- [x] Keep all published stories discoverable on the homepage below newer stories.

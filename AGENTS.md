@@ -1,0 +1,2 @@
+- Store optional additional story images and captions in the stories record as structured JSON so editorial media stays attached to the article without a separate table.
+- Store article formatting as sanitized HTML in the existing story body field while rendering older plain-text stories unchanged.

@@ -1,4 +1,5 @@
 import { useEditor, EditorContent } from "@tiptap/react";
+import { useEffect } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
 import { FontSize, TextStyle } from "@tiptap/extension-text-style";
@@ -12,6 +13,10 @@ export default function ArticleEditor({ value, onChange }: { value: string; onCh
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
     editorProps: { attributes: { class: "article-editor-content" } },
   });
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) editor.commands.setContent(value, { emitUpdate: false });
+  }, [editor, value]);
 
   if (!editor) return null;
   return (
