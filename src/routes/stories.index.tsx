@@ -38,6 +38,7 @@ function StoriesPage() {
   const [stories, setStories] = useState<StoryRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState(TABS[0]);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -51,14 +52,19 @@ function StoriesPage() {
     })();
   }, []);
 
-  const filtered = tab === TABS[0]
-    ? stories
-    : stories.filter((s) => {
-        const t = tab.toLowerCase();
-        const c = (s.category || "").toLowerCase();
-        const tags = (s.tags || []).map((x) => x.toLowerCase());
-        return c.includes(t) || t.includes(c) || tags.some((x) => x.includes(t) || t.includes(x));
-      });
+  const categories = Array.from(new Set([...TABS, ...stories.map((s) => s.category).filter(Boolean)]));
+  const q = query.trim().toLowerCase();
+  const filtered = stories.filter((s) => {
+    if (tab !== TABS[0]) {
+      const t = tab.toLowerCase();
+      const c = (s.category || "").toLowerCase();
+      const tags = (s.tags || []).map((x) => x.toLowerCase());
+      if (!(c.includes(t) || t.includes(c) || tags.some((x) => x.includes(t) || t.includes(x)))) return false;
+    }
+    if (!q) return true;
+    const hay = `${s.title} ${s.summary ?? ""} ${s.author ?? ""} ${s.category} ${(s.tags ?? []).join(" ")}`.toLowerCase();
+    return q.split(/\s+/).every((w) => hay.includes(w));
+  });
 
   return (
     <Layout>
@@ -68,15 +74,23 @@ function StoriesPage() {
         <p>In-depth features, profiles, and long-form journalism about the people and businesses shaping Liberia.</p>
       </div>
       <div className="section-tabs">
-        {TABS.map((t) => (
+        {categories.map((t) => (
           <button key={t} className={`tab-btn ${tab === t ? "active" : ""}`} onClick={() => setTab(t)}>{t}</button>
         ))}
       </div>
       <div className="main-layout">
         <div>
-          <div className="section-label-sm">{tab === TABS[0] ? "Featured Stories" : tab}</div>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search stories by keyword, author or topic…"
+            aria-label="Search stories"
+            style={{ width: "100%", padding: ".7rem 1rem", marginBottom: "1.25rem", border: "1px solid var(--lbh-border)", borderRadius: 6, background: "var(--cream-light)", color: "var(--text-dark)", fontSize: 15 }}
+          />
+          <div className="section-label-sm">{tab === TABS[0] ? "Featured Stories" : tab}{!loading && ` · ${filtered.length} found`}</div>
           {loading && <p>Loading stories…</p>}
-          {!loading && filtered.length === 0 && <p style={{ color: "var(--text-light)" }}>No stories in this category yet.</p>}
+          {!loading && filtered.length === 0 && <p style={{ color: "var(--text-light)" }}>No stories match your search.</p>}
           {filtered.map((s) => (
             <div className="featured-story" key={s.id}>
               {s.cover_url && <img src={s.cover_url} alt={s.title} loading="lazy" />}
