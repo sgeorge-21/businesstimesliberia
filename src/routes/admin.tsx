@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import ArticleEditor from "@/components/lbh/ArticleEditor";
-import type { StoryImage } from "@/lib/article-content";
+import { parseStoryImages, type StoryImage } from "@/lib/article-content";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -197,7 +197,7 @@ function NewsForm({ onDone, editId, onCancel }: { onDone: (message: string) => v
   const [cover, setCover] = useState<File | null>(null);
   const [existingCover, setExistingCover] = useState<string | null>(null);
   const [coverCaption, setCoverCaption] = useState("");
-  const [extraImages, setExtraImages] = useState<{ file: File | null; url: string; caption: string }[]>([]);
+  const [extraImages, setExtraImages] = useState<{ file: File | null; url: string; caption: string; position: string }[]>([]);
   const [originalPublishedAt, setOriginalPublishedAt] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -210,7 +210,7 @@ function NewsForm({ onDone, editId, onCancel }: { onDone: (message: string) => v
       setSummary(data.summary || ""); setBody(data.body || ""); setTags((data.tags || []).join(", "));
       setFeatured(data.featured || "no"); setExistingCover(data.cover_url); setCoverCaption(data.cover_caption || "");
       setOriginalPublishedAt(data.published_at);
-      setExtraImages((Array.isArray(data.story_images) ? data.story_images : []).filter((image): image is { url: string; caption: string } => typeof image === "object" && image !== null && "url" in image && typeof image.url === "string" && "caption" in image && typeof image.caption === "string").slice(0, 3).map((image) => ({ ...image, file: null })));
+      setExtraImages(parseStoryImages(data.story_images).map((image) => ({ ...image, position: image.position || "end", file: null })));
     });
     return () => { active = false; };
   }, [editId]);
@@ -226,7 +226,7 @@ function NewsForm({ onDone, editId, onCancel }: { onDone: (message: string) => v
     for (const image of extraImages) {
       const url = image.file ? await uploadFile(image.file, "stories") : image.url;
       if (!url) { setBusy(false); return; }
-      story_images.push({ url, caption: image.caption.trim() });
+      story_images.push({ url, caption: image.caption.trim(), position: image.position });
     }
     const payload = {
       title, category, author, read_minutes: readMin || null, summary, body,
@@ -276,9 +276,15 @@ function NewsForm({ onDone, editId, onCancel }: { onDone: (message: string) => v
             {image.url && <img src={image.url} alt="Existing story picture" />}
             <input type="file" accept="image/*" aria-label={`Picture ${index + 1}`} onChange={(e) => setExtraImages((current) => current.map((item, i) => i === index ? { ...item, file: e.target.files?.[0] || null } : item))} />
             <input value={image.caption} aria-label={`Caption for picture ${index + 1}`} onChange={(e) => setExtraImages((current) => current.map((item, i) => i === index ? { ...item, caption: e.target.value } : item))} placeholder="Caption or photo credit (optional)" />
+            <select aria-label={`Where to place picture ${index + 1}`} value={image.position} onChange={(e) => setExtraImages((current) => current.map((item, i) => i === index ? { ...item, position: e.target.value } : item))}>
+              <option value="top">Top of the story</option>
+              <option value="middle">Middle of the story</option>
+              {Array.from({ length: 15 }, (_, n) => <option key={n} value={`after-${n + 1}`}>After paragraph {n + 1}</option>)}
+              <option value="end">End of the story</option>
+            </select>
             <Button type="button" variant="outline" onClick={() => setExtraImages((current) => current.filter((_, i) => i !== index))}>Remove picture</Button>
           </div>)}
-          {extraImages.length < 3 && <Button type="button" variant="outline" onClick={() => setExtraImages((current) => [...current, { file: null, url: "", caption: "" }])}>Add picture</Button>}
+          {extraImages.length < 3 && <Button type="button" variant="outline" onClick={() => setExtraImages((current) => [...current, { file: null, url: "", caption: "", position: "end" }])}>Add picture</Button>}
         </div>
         <div className="admin-form-row">
           <div className="admin-form-group"><label>Tags (comma-separated)</label><input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="e.g. CBL, banking" /></div>
