@@ -1,8 +1,46 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import Layout from "@/components/lbh/Layout";
 import Comments from "@/components/lbh/Comments";
+import { CardsGrid } from "@/components/lbh/Cards";
+import { usePublishedStories, toCard } from "@/lib/useStories";
 import { supabase } from "@/integrations/supabase/client";
-import { parseStoryImages, safeArticleHtml } from "@/lib/article-content";
+import { imageSlot, parseStoryImages, safeArticleHtml, splitHtmlBlocks, type StoryImage } from "@/lib/article-content";
+
+function Figure({ image, alt }: { image: StoryImage; alt: string }) {
+  return <figure className="article-figure">
+    <img src={image.url} alt={image.caption || alt} loading="lazy" />
+    {image.caption && <figcaption>{image.caption}</figcaption>}
+  </figure>;
+}
+
+function StoryBody({ story }: { story: Story }) {
+  const body = story.body?.trim() || "";
+  const isHtml = body.startsWith("<");
+  const blocks = !body ? [] : isHtml ? splitHtmlBlocks(safeArticleHtml(body)) : body.split(/\n\s*\n/);
+  const images = parseStoryImages(story.story_images);
+  const at = (slot: number) => images.filter((im) => imageSlot(im.position, blocks.length) === slot)
+    .map((im, i) => <Figure key={`${slot}-${i}`} image={im} alt={`${story.title} — photo`} />);
+  return <>
+    {at(0)}
+    {blocks.map((b, i) => <div key={i}>
+      {isHtml
+        ? <div className="article-body" dangerouslySetInnerHTML={{ __html: b }} />
+        : <div className="article-body article-plain">{b}</div>}
+      {at(i + 1)}
+    </div>)}
+  </>;
+}
+
+function Recommended({ currentId, category }: { currentId: string; category: string }) {
+  const { stories } = usePublishedStories();
+  const others = stories.filter((s) => s.id !== currentId);
+  const picks = [...others.filter((s) => s.category === category), ...others.filter((s) => s.category !== category)].slice(0, 3);
+  if (!picks.length) return null;
+  return <section style={{ marginTop: "3rem" }} aria-label="Recommended stories">
+    <div className="section-label-sm">Recommended Stories</div>
+    <CardsGrid items={picks.map(toCard)} />
+  </section>;
+}
 
 export const Route = createFileRoute("/stories/$slug")({
   loader: async ({ params }) => {
@@ -109,13 +147,7 @@ function StoryPage() {
               <img src={story.cover_url} alt={story.cover_caption || story.title} loading="lazy" />
               {story.cover_caption && <figcaption>{story.cover_caption}</figcaption>}
             </figure>}
-            {story.body && (story.body.trim().startsWith("<")
-              ? <div className="article-body" dangerouslySetInnerHTML={{ __html: safeArticleHtml(story.body) }} />
-              : <div className="article-body article-plain">{story.body}</div>)}
-            {parseStoryImages(story.story_images).map((image, index) => <figure className="article-figure" key={`${image.url}-${index}`}>
-              <img src={image.url} alt={image.caption || `${story.title} — photo ${index + 2}`} loading="lazy" />
-              {image.caption && <figcaption>{image.caption}</figcaption>}
-            </figure>)}
+            <StoryBody story={story} />
             {story.tags && story.tags.length > 0 && (
               <div style={{ marginTop: "2.5rem", display: "flex", gap: ".5rem", flexWrap: "wrap" }}>
                 {story.tags.map((t) => (
@@ -124,6 +156,7 @@ function StoryPage() {
               </div>
             )}
             <Comments storyId={story.id} />
+            <Recommended currentId={story.id} category={story.category} />
           </>
         )}
       </article>
