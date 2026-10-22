@@ -276,7 +276,8 @@ function NewsForm({ onDone, editId, onCancel }: { onDone: (message: string) => v
             {image.url && <img src={image.url} alt="Existing story picture" />}
             <input type="file" accept="image/*" aria-label={`Picture ${index + 1}`} onChange={(e) => setExtraImages((current) => current.map((item, i) => i === index ? { ...item, file: e.target.files?.[0] || null } : item))} />
             <input value={image.caption} aria-label={`Caption for picture ${index + 1}`} onChange={(e) => setExtraImages((current) => current.map((item, i) => i === index ? { ...item, caption: e.target.value } : item))} placeholder="Caption or photo credit (optional)" />
-            <select aria-label={`Where to place picture ${index + 1}`} value={image.position} onChange={(e) => setExtraImages((current) => current.map((item, i) => i === index ? { ...item, position: e.target.value } : item))}>
+            <label style={{ fontWeight: 600, fontSize: 13 }}>Where should picture {index + 1} appear in the story?</label>
+            <select style={{ padding: "8px 10px", border: "1px solid var(--lbh-border)", borderRadius: 4, fontSize: 14 }} aria-label={`Where to place picture ${index + 1}`} value={image.position} onChange={(e) => setExtraImages((current) => current.map((item, i) => i === index ? { ...item, position: e.target.value } : item))}>
               <option value="top">Top of the story</option>
               <option value="middle">Middle of the story</option>
               {Array.from({ length: 15 }, (_, n) => <option key={n} value={`after-${n + 1}`}>After paragraph {n + 1}</option>)}
