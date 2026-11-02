@@ -56,7 +56,7 @@ export const Route = createFileRoute("/stories/$slug")({
     const story = loaderData?.story;
     const title = story ? `${story.title} — The Liberian Business Hour` : "Story — The Liberian Business Hour";
     const description = story?.summary || "Read the full story from The Liberian Business Hour news desk.";
-    const url = `https://businesstimesliberia.lovable.app/stories/${params.slug}`;
+    const url = `https://liberianbusinesshour.com/stories/${params.slug}`;
     const imageMeta = story?.cover_url && story.cover_url.startsWith("https://")
       ? [
           { property: "og:image", content: story.cover_url },
