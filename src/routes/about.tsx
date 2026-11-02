@@ -11,10 +11,10 @@ export const Route = createFileRoute("/about")({
       { property: "og:title", content: "About — The Liberian Business Hour" },
       { property: "og:description", content: "Meet The Liberian Business Hour, its mission, vision and host James T. Worquea III." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://businesstimesliberia.lovable.app/about" },
+      { property: "og:url", content: "https://liberianbusinesshour.com/about" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/about" }],
+    links: [{ rel: "canonical", href: "https://liberianbusinesshour.com/about" }],
   }),
 });
 

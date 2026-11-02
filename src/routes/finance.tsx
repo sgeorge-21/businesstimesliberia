@@ -13,10 +13,10 @@ export const Route = createFileRoute("/finance")({
       { property: "og:title", content: "Liberia Finance News — The Liberian Business Hour" },
       { property: "og:description", content: "Banking, monetary policy, investment and financial services news from Liberia." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://businesstimesliberia.lovable.app/finance" },
+      { property: "og:url", content: "https://liberianbusinesshour.com/finance" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/finance" }],
+    links: [{ rel: "canonical", href: "https://liberianbusinesshour.com/finance" }],
   }),
 });
 

@@ -14,10 +14,10 @@ export const Route = createFileRoute("/economy")({
       { property: "og:title", content: "Liberia Economy News — The Liberian Business Hour" },
       { property: "og:description", content: "Current Liberian economic news, CBL exchange rates, GDP, budget and policy coverage." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://businesstimesliberia.lovable.app/economy" },
+      { property: "og:url", content: "https://liberianbusinesshour.com/economy" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/economy" }],
+    links: [{ rel: "canonical", href: "https://liberianbusinesshour.com/economy" }],
   }),
 });
 

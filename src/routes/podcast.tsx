@@ -13,10 +13,10 @@ export const Route = createFileRoute("/podcast")({
       { property: "og:title", content: "Podcast — The Liberian Business Hour" },
       { property: "og:description", content: "Listen to The Liberian Business Hour podcast and radio archive from Monrovia, Liberia." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://businesstimesliberia.lovable.app/podcast" },
+      { property: "og:url", content: "https://liberianbusinesshour.com/podcast" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/podcast" }],
+    links: [{ rel: "canonical", href: "https://liberianbusinesshour.com/podcast" }],
   }),
 });
 

@@ -12,10 +12,10 @@ export const Route = createFileRoute("/stories/")({
       { property: "og:title", content: "Liberia Business Stories — The Liberian Business Hour" },
       { property: "og:description", content: "Read in-depth Liberian business features, profiles, opinions and investigations." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://businesstimesliberia.lovable.app/stories" },
+      { property: "og:url", content: "https://liberianbusinesshour.com/stories" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://businesstimesliberia.lovable.app/stories" }],
+    links: [{ rel: "canonical", href: "https://liberianbusinesshour.com/stories" }],
   }),
 });
 
